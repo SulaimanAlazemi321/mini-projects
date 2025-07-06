@@ -1,44 +1,692 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Royal Couture - Exclusive luxury dresses boutique in Sabahiya, Kuwait. By appointment only.">
+  <meta name="keywords" content="luxury dresses, exclusive boutique, Sabahiya Kuwait, designer gowns">
 
-  <!-- Tailwind CDN (production build) -->
-  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <!-- Tailwind CSS with all plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Cinzel:wght@400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- AOS Animation Library -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css"/>
+  
+  <!-- GSAP for Premium Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
 
-  <!-- Google Font — Playfair Display for elegance -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'royal-purple': '#2d1b69',
+            'deep-purple': '#1a0f3d',
+            'royal-gold': '#d4af37',
+            'champagne': '#f7e7ce',
+            'pearl': '#faf7f5',
+            'midnight': '#0a0014',
+          },
+          fontFamily: {
+            'playfair': ['Playfair Display', 'serif'],
+            'cormorant': ['Cormorant Garamond', 'serif'],
+            'montserrat': ['Montserrat', 'sans-serif'],
+            'cinzel': ['Cinzel', 'serif'],
+            'tajawal': ['Tajawal', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'shimmer': 'shimmer 3s linear infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'sparkle': 'sparkle 1.5s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' },
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.5)' },
+              '100%': { boxShadow: '0 0 30px rgba(212, 175, 55, 0.8), 0 0 40px rgba(212, 175, 55, 0.6)' },
+            },
+            sparkle: {
+              '0%, 100%': { opacity: 0 },
+              '50%': { opacity: 1 },
+            }
+          }
+        }
+      }
+    }
+  </script>
 
+  <!-- Ultra Luxury Styles -->
   <style>
-    body { font-family: 'Playfair Display', serif; }
-    /* subtle animated background pattern */
-    .pattern::before{
-      content:'';
-      position:absolute;inset:0;
-      background:url('/static/css/ornament.svg') center/420px repeat;
-      opacity:.05;pointer-events:none;
+    /* Premium Variables */
+    :root {
+      --royal-purple: #2d1b69;
+      --deep-purple: #1a0f3d;
+      --royal-gold: #d4af37;
+      --champagne: #f7e7ce;
+      --pearl: #faf7f5;
+      --midnight: #0a0014;
+    }
+
+    /* Luxury Base Styles */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--pearl);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Arabic Support */
+    [dir="rtl"] body {
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    [dir="rtl"] .font-cinzel,
+    [dir="rtl"] .font-playfair,
+    [dir="rtl"] .font-cormorant {
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    /* RTL Navbar Spacing */
+    [dir="rtl"] .hidden.md\\:flex {
+      flex-direction: row-reverse;
+    }
+
+    [dir="rtl"] .flex.items-center.space-x-4 {
+      flex-direction: row-reverse;
+      gap: 1rem;
+    }
+
+    [dir="rtl"] .flex.items-center.space-x-8 {
+      flex-direction: row-reverse;
+      gap: 2rem;
+    }
+
+    [dir="rtl"] .nav-link::after {
+      right: 0;
+      left: auto;
+    }
+
+    /* Luxury Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--pearl);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, var(--royal-purple), var(--royal-gold));
+      border-radius: 5px;
+    }
+
+    /* Premium Text Selection */
+    ::selection {
+      background: var(--royal-gold);
+      color: var(--deep-purple);
+    }
+
+    /* Luxury Navbar */
+    .luxury-nav {
+      background: rgba(250, 247, 245, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .luxury-nav.scrolled {
+      background: rgba(26, 15, 61, 0.98);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .luxury-nav.scrolled .nav-link {
+      color: var(--champagne);
+    }
+
+    .luxury-nav.scrolled .logo-text {
+      color: var(--royal-gold);
+    }
+
+    /* Animated Logo */
+    .logo-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .logo-crown {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      color: var(--royal-gold);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* Premium Buttons */
+    .luxury-btn {
+      position: relative;
+      background: linear-gradient(135deg, var(--royal-purple), var(--deep-purple));
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .luxury-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .luxury-btn:hover::before {
+      left: 100%;
+    }
+
+    .luxury-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(45, 27, 105, 0.3);
+    }
+
+    /* WhatsApp Button */
+    .whatsapp-btn {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+    }
+
+    .whatsapp-btn:hover {
+      box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+    }
+
+    /* Gold Accent Button */
+    .gold-btn {
+      background: linear-gradient(135deg, var(--royal-gold), #b8941f);
+      color: var(--deep-purple);
+    }
+
+    /* Premium Link Styles */
+    .nav-link {
+      position: relative;
+      color: var(--deep-purple);
+      font-weight: 500;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--royal-gold), var(--champagne));
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Language Toggle */
+    .lang-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 25px;
+      padding: 0.25rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .lang-toggle button {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .lang-toggle button.active {
+      background: var(--royal-gold);
+      color: var(--deep-purple);
+    }
+
+    /* Page Loader - Only show on initial load */
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      background: var(--midnight);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+
+    .page-loader.loaded {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 3rem;
+      color: var(--royal-gold);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    /* Glass Morphism Effects */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Premium Footer */
+    .luxury-footer {
+      background: linear-gradient(135deg, var(--deep-purple), var(--royal-purple));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .luxury-footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--royal-gold), transparent);
+      animation: shimmer 3s linear infinite;
+    }
+
+    /* Floating Elements */
+    .floating-element {
+      position: fixed;
+      pointer-events: none;
+      opacity: 0.1;
+      z-index: 1;
+    }
+
+    .floating-diamond {
+      width: 30px;
+      height: 30px;
+      background: var(--royal-gold);
+      transform: rotate(45deg);
+      animation: float 8s ease-in-out infinite;
+    }
+
+    /* Quick View Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 1000px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
     }
   </style>
 
-  <title>{% block title %}Royal Dresses{% endblock %}</title>
+  <title>{% block title %}Royal Couture - Exclusive Boutique{% endblock %}</title>
 </head>
-<body class="bg-gradient-to-br from-[#faf6ff] to-[#f1effc] min-h-screen flex flex-col">
+<body>
+  
+  <!-- Page Loader - Only shows on first visit -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-logo">Royal Couture</div>
+  </div>
 
-  <!-- nav -->
-  <nav class="w-full py-4 px-6 flex justify-between items-center bg-white/70 backdrop-blur border-b border-[#e0d8ff]">
-    <span class="text-2xl font-semibold tracking-wider text-indigo-800">Royal Couture</span>
-    <a href="/customer/register" class="text-indigo-700 hover:text-indigo-900 font-medium">Register</a>
+  <!-- Floating Elements -->
+  <div class="floating-element floating-diamond" style="top: 20%; left: 10%;"></div>
+  <div class="floating-element floating-diamond" style="top: 60%; right: 15%; animation-delay: -2s;"></div>
+  <div class="floating-element floating-diamond" style="bottom: 20%; left: 5%; animation-delay: -4s;"></div>
+
+  <!-- Premium Navigation -->
+  <nav class="luxury-nav fixed top-0 w-full z-50 px-8 py-5" id="navbar">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/customer/home" class="logo-container">
+        <span class="logo-crown">♔</span>
+        <span class="logo-text font-cinzel text-2xl font-bold text-royal-purple tracking-wider">
+          ROYAL COUTURE
+        </span>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="/customer/home" class="nav-link" data-translate="home">Home</a>
+        <a href="#collections" class="nav-link" data-translate="designs">Designs</a>
+        <a href="#contact" class="nav-link" data-translate="contact">Contact</a>
+      </div>
+
+      <!-- Right Side Items -->
+      <div class="flex items-center space-x-4">
+        <!-- Language Toggle -->
+        <div class="lang-toggle">
+          <button class="active" onclick="setLanguage('en')">EN</button>
+          <button onclick="setLanguage('ar')">AR</button>
+        </div>
+        
+        <!-- Designer Login -->
+        <a href="/customer/login" class="nav-link text-sm hidden sm:inline-block">
+          <i class="fas fa-user-circle mr-2"></i>
+          <span data-translate="designer_login">Designer</span>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden text-royal-purple ml-4" id="mobileMenuBtn">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden absolute top-full left-0 w-full bg-pearl shadow-lg md:hidden" id="mobileMenu">
+      <div class="p-6 space-y-4">
+        <a href="/customer/home" class="block nav-link py-2" data-translate="home">Home</a>
+        <a href="#collections" class="block nav-link py-2" data-translate="designs">Designs</a>
+        <a href="#contact" class="block nav-link py-2" data-translate="contact">Contact</a>
+        <a href="/customer/login" class="block nav-link py-2">
+          <i class="fas fa-user-circle mr-2"></i>
+          <span data-translate="designer_login">Designer</span>
+        </a>
+      </div>
+    </div>
   </nav>
 
-  <!-- main -->
-  <main class="flex-grow flex items-start justify-center pattern relative">
-      {% block content %}{% endblock %}
+  <!-- Main Content -->
+  <main class="min-h-screen pt-20">
+    {% block content %}{% endblock %}
   </main>
 
-  <!-- footer -->
-  <footer class="text-center py-4 text-sm text-indigo-700 bg-white/60 backdrop-blur">
-      © {{ now().year }} Royal Couture — All rights reserved
+  <!-- Luxury Footer -->
+  <footer class="luxury-footer text-white pt-20 pb-10 px-8 mt-32">
+    <div class="max-w-7xl mx-auto">
+      <!-- Footer Content -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
+        <!-- Brand -->
+        <div class="md:col-span-1">
+          <h3 class="font-cinzel text-4xl font-bold text-royal-gold mb-4">Royal Couture</h3>
+          <p class="font-cormorant text-lg text-champagne leading-relaxed" data-translate="footer_desc">
+            Exclusive designs for discerning clients. 
+            Each piece is carefully selected for elegance and sophistication.
+          </p>
+        </div>
+
+        <!-- Contact Us -->
+        <div>
+          <h4 class="font-montserrat font-semibold text-royal-gold mb-4 uppercase tracking-wider" data-translate="contact_us">Contact Us</h4>
+          <ul class="space-y-3 font-cormorant text-champagne">
+            <li class="flex items-center">
+              <i class="fab fa-whatsapp mr-3 text-royal-gold"></i>
+              <a href="https://wa.me/96551590622" class="hover:text-white transition-colors">
+                <span class="phone-number">+965 5159 0622</span>
+              </a>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-clock mr-3 text-royal-gold"></i>
+              <span data-translate="available_hours">Available: 10 AM - 8 PM</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="border-t border-white/20 pt-8 text-center">
+        <p class="text-champagne/80 text-sm">
+          © {{ now().year }} Royal Couture. All rights reserved.
+        </p>
+      </div>
+    </div>
   </footer>
+
+  <!-- Quick View Modal -->
+  <div id="quickViewModal" class="modal">
+    <div class="modal-content">
+      <button class="absolute top-4 right-4 text-3xl text-gray-500 hover:text-gray-700" onclick="closeQuickView()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="modalContent" class="p-8">
+        <!-- Content will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100
+    });
+
+    // Page Loader - Check if first visit
+    window.addEventListener('load', () => {
+      const hasVisited = sessionStorage.getItem('hasVisited');
+      const loader = document.getElementById('pageLoader');
+      
+      if (!hasVisited) {
+        sessionStorage.setItem('hasVisited', 'true');
+        setTimeout(() => {
+          loader.classList.add('loaded');
+        }, 2000);
+      } else {
+        loader.style.display = 'none';
+      }
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 100) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Language Toggle
+    function setLanguage(lang) {
+      if (lang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+        // Update button states
+        document.querySelectorAll('.lang-toggle button').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.textContent === 'AR') btn.classList.add('active');
+        });
+        // Apply Arabic translations
+        applyTranslations('ar');
+      } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'en');
+        // Update button states
+        document.querySelectorAll('.lang-toggle button').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.textContent === 'EN') btn.classList.add('active');
+        });
+        // Apply English translations
+        applyTranslations('en');
+      }
+      localStorage.setItem('language', lang);
+    }
+
+    // Translation system
+    const translations = {
+      ar: {
+        home: 'الرئيسية',
+        designs: 'التصاميم',
+        contact: 'تواصل',
+        designer_login: 'دخول المصمم',
+        contact_us: 'تواصل معنا',
+        available_hours: 'متاح: ١٠ صباحاً - ٨ مساءً',
+        footer_desc: 'تصاميم حصرية للعملاء المميزين. كل قطعة مختارة بعناية للأناقة والرقي.',
+        contact_designer: 'تواصل مع المصمم',
+        contact_via_whatsapp: 'للطلب والاستفسار عبر الواتساب'
+      },
+      en: {
+        home: 'Home',
+        designs: 'Designs',
+        contact: 'Contact',
+        designer_login: 'Designer',
+        contact_us: 'Contact Us',
+        available_hours: 'Available: 10 AM - 8 PM',
+        footer_desc: 'Exclusive designs for discerning clients. Each piece is carefully selected for elegance and sophistication.',
+        contact_designer: 'Contact Designer',
+        contact_via_whatsapp: 'To order and inquire via WhatsApp'
+      }
+    };
+
+    function applyTranslations(lang) {
+      document.querySelectorAll('[data-translate]').forEach(elem => {
+        const key = elem.getAttribute('data-translate');
+        if (translations[lang][key]) {
+          elem.textContent = translations[lang][key];
+        }
+      });
+      
+      // Handle phone number formatting
+      const phoneNumbers = document.querySelectorAll('.phone-number');
+      phoneNumbers.forEach(phone => {
+        const originalNumber = '+965 5159 0622';
+        if (lang === 'ar') {
+          // Convert to Arabic numerals
+          const arabicNumber = originalNumber.replace(/[0-9]/g, function(match) {
+            return String.fromCharCode(1632 + parseInt(match, 10));
+          });
+          phone.textContent = arabicNumber;
+        } else {
+          phone.textContent = originalNumber;
+        }
+      });
+    }
+
+    // Check for saved language preference
+    const savedLang = localStorage.getItem('language') || 'en';
+    setLanguage(savedLang);
+
+    // Quick View Modal Functions
+    window.openQuickView = function(dress) {
+      const modal = document.getElementById('quickViewModal');
+      const content = document.getElementById('modalContent');
+      
+      // You'll populate this with dress details
+      content.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <img src="${dress.image}" alt="${dress.title}" class="w-full rounded-lg">
+          </div>
+          <div>
+            <h2 class="text-3xl font-cinzel font-bold text-deep-purple mb-4">${dress.title}</h2>
+            <p class="text-lg font-cormorant text-gray-700 mb-6">${dress.description}</p>
+            <p class="text-2xl font-playfair text-royal-gold mb-8">${dress.price}</p>
+            
+            <div class="bg-gray-50 rounded-lg p-6 mb-6">
+              <h3 class="font-montserrat font-semibold text-deep-purple mb-3" data-translate="contact_designer">Contact Designer</h3>
+              <p class="text-gray-600 mb-4" data-translate="contact_via_whatsapp">To order and inquire via WhatsApp</p>
+              <a href="https://wa.me/96551590622?text=Hello, I'm interested in ${dress.title}" 
+                 class="whatsapp-btn luxury-btn w-full text-center flex items-center justify-center gap-3">
+                <i class="fab fa-whatsapp text-xl"></i>
+                <span>+965 5159 0622</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeQuickView = function() {
+      const modal = document.getElementById('quickViewModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    };
+
+    // Close modal on backdrop click
+    document.getElementById('quickViewModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeQuickView();
+      }
+    });
+
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+    // Floating elements parallax
+    gsap.to('.floating-diamond', {
+      y: -100,
+      rotation: 360,
+      duration: 10,
+      ease: 'none',
+      repeat: -1,
+      stagger: {
+        each: 2,
+        from: 'random'
+      }
+    });
+  </script>
+
+  {% block extra_scripts %}{% endblock %}
 </body>
 </html>

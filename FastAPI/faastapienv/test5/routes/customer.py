@@ -56,35 +56,14 @@ async def get_customers(db: db_dependency):
     return db.query(Customers).all()
 
 
-@router.post("/add_customer", status_code= status.HTTP_201_CREATED)
-async def add_customer(db: db_dependency, 
-    username: Annotated[str, Form(min_length=3, max_length=25)],
-    email:    Annotated[str, Form(min_length=10, max_length=50)],
-    password: Annotated[str, Form(min_length=8, max_length=50)],
-):
-    try:
-        new_customer = Customers(
-            username = username,
-            email = email,
-            hashed_password = pass_hasher.hash(password),
-            role = "customer" 
-        )
+@router.get("/login")
+async def login(req: Request, error: str | None = None):
+    return template.TemplateResponse("login.html", {"request": req, "error": error})
 
-        db.add(new_customer)
-        db.commit()
-
-        return RedirectResponse("/customer/register?status=ok", status_code=303)
-
-    except IntegrityError:              
-        db.rollback()
-        return RedirectResponse("/customer/register?status=dup", status_code=303)
-
-    except SQLAlchemyError:
-        db.rollback()
-        return RedirectResponse("/customer/register?status=err", status_code=303)
+@router.get("/home")    
+async def home_page(request: Request):
+    return template.TemplateResponse("home.html", {"request": request})
 
 
-@router.get("/register")
-async def register(req: Request, status: str | None = None):
-    return template.TemplateResponse("register.html", {"request": req, "status": status})
+
 
