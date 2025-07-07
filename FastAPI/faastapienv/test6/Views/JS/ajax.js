@@ -1,37 +1,89 @@
-const btn   = document.getElementById('loginBtn');
-const userI = document.getElementById('user');
-const passI = document.getElementById('pwd');
+loginButton = document.getElementById('loginBtn')
+submitButton = document.getElementById("idBTN")
 
-// initial state ─ check if backend sees us as logged‑in
-window.addEventListener('DOMContentLoaded', () => {
-  fetch('/ecoUser/me', { credentials: 'include' })
-    .then(r => { if (r.ok) setLogoutUI(); });
-});
+async function sendUserPassword() {
+const username = document.getElementById('user').value;
+  const password = document.getElementById('pwd').value;   
 
-btn.addEventListener('click', () => {
-  if (btn.dataset.state === 'logout') {
-    fetch('/ecoUser/logout', { method: 'POST', credentials: 'include' })
-      .then(() => setLoginUI());
-    return;
-  }
-
-  const body = new URLSearchParams({ username: userI.value, password: passI.value });
-  fetch('/ecoUser/token', {
+  const r = await fetch('/ecoUser/ecoUserLogin', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    credentials: 'include',
-    body
-  })
-  .then(r => r.ok ? setLogoutUI() : alert('Login failed'))
-  .catch(console.error);
-});
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
 
-function setLogoutUI() {
-  btn.textContent = 'Logout';
-  btn.dataset.state = 'logout';
-  userI.value = passI.value = '';
+  const data = await r.json();          
+
+  if (!data.detail) 
+    {                
+       alert('Logged in');
+    } 
+    else 
+    {
+       alert(data.detail);      
+    }
+  
 }
-function setLoginUI() {
-  btn.textContent = 'Login';
-  btn.dataset.state = 'login';
+loginButton.addEventListener('click', sendUserPassword);
+
+
+async function getUsers() {
+  try {
+    const r = await fetch("/ecoUser/getEcoUsers");
+    const data = await r.json();
+
+    let output = `
+      <div class="row fw-bold border-bottom pb-2">
+        <div class="col-4">Username</div>
+        <div class="col-4">Password</div>
+        <div class="col-4">Role</div>
+      </div>
+    `;
+
+    data.forEach(user => {
+      output += `
+        <div class="row py-2 border-bottom">
+          <div class="col-4">${user.username}</div>
+          <div class="col-4 text-break">${user.password}</div>
+          <div class="col-4">${user.role}</div>
+        </div>
+      `;
+    });
+
+    document.getElementById("out").innerHTML = output;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    document.getElementById("out").textContent = "Error loading users.";
+  }
 }
+
+
+
+addEventListener("DOMContentLoaded", getUsers)
+
+
+
+
+async function addUser(event) {
+   event.preventDefault()
+   let username = document.getElementById("usrname").value
+   let password = document.getElementById("passwd").value
+   let role = document.getElementById("role").value
+
+   const body = JSON.stringify({ username, password, role})
+
+   const r = await fetch("/ecoUser/addEcoUser",{
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body 
+   })
+
+   if (r.status == 201)
+   {
+      alert("user is created")
+   }else
+   {
+      alert("user is not created")
+   }  
+}
+
+document.getElementById("userForm").addEventListener("submit", addUser)

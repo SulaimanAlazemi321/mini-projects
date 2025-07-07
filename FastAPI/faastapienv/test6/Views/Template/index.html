@@ -1,1 +1,51 @@
 {% include 'Template/layout.html' %}
+
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-4 text-center">User Information</h4>
+      <form id="userForm">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="usrname" placeholder="Enter username">
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="passwd" placeholder="Enter password">
+        </div>
+
+            <div class="mb-3">
+          <label for="role" class="form-label">Role</label>
+          <select class="form-select" id="role">
+            <option value="user">User</option>
+            <option value="manager">Manager</option>
+          </select>
+        </div>
+
+
+        <button type="submit" id="submitBtn" class="btn btn-primary w-100">Submit</button>
+      </form>
+    </div>
+  </div>
+
+ 
+<div class="mt-4">
+  <button id="loadBtn" class="btn btn-secondary mb-3">Load users</button>
+  
+  <div class="container" id="out">
+    <!-- Dynamic content will be inserted here -->
+  </div>
+</div>
+
+
+{% if users%}
+
+{% for user in users%}
+<p>{{user.username}}</p>
+<p>{{user.password}}</p>
+<p>{{user.role}}</p>
+
+{%endfor%}
+{%endif%}
+
