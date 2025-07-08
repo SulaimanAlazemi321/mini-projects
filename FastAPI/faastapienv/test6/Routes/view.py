@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi.templating import Jinja2Templates
 import Routes.ecoUser
 from Models.database import local_session
-from Models.model import ecoUser
+from Models.model import ecoUser, ecoUsertypes, ecoCategories, ecoFacilities  # CHANGED: Added ecoFacilities and ecoCategories
 
 router = APIRouter()
 template = Jinja2Templates(directory="Views")
@@ -15,7 +15,14 @@ template = Jinja2Templates(directory="Views")
 async def getHomePage(req: Request):
     db = local_session()
     try:
-        users = db.query(ecoUser).all()
+        # CHANGED: Join ecoFacilities with ecoCategories and ecoUser to get facility info with category names and contributor names
+        facilities =db.query(
+            ecoFacilities,ecoCategories.name,ecoUser.username
+        ).join(
+            ecoCategories, ecoFacilities.category == ecoCategories.id
+        ).join(
+            ecoUser, ecoFacilities.contributor == ecoUser.id
+        ).all()
     finally:
         db.close()
-    return template.TemplateResponse("/Template/index.html", {"request": req, "users": users})
+    return template.TemplateResponse("/Template/index.html", {"request": req, "facilities": facilities})

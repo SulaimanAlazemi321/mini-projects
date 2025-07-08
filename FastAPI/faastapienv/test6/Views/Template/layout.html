@@ -15,14 +15,27 @@
   <div class="container-fluid">
     <a class="navbar-brand fw-bold fs-4" href="#">ecoFacility</a>
 
-    <!-- simple login block -->
-    <div class="d-flex ms-auto">
+    <!-- Center search bar -->
+   <!-- search bar (kept) -->
+<div class="d-flex mx-auto w-50 position-relative">
+  <input class="form-control" id="search" placeholder="Search">
+
+  <!-- live results -->
+  <div id="searchResults"
+       class="list-group position-absolute top-100 start-0 w-100 z-3
+              bg-white border border-secondary rounded-1 shadow-sm">
+       <!-- JS fills rows here -->
+  </div>
+</div>
+    <!-- Login block -->
+    <div class="d-flex">
       <input class="form-control me-2" id="user" placeholder="username" required>
-      <input class="form-control me-2" id="pwd"  type="password" placeholder="password" required>
+      <input class="form-control me-2" id="pwd" type="password" placeholder="password" required>
       <button class="btn btn-outline-dark" id="loginBtn">Login</button>
     </div>
   </div>
 </nav>
+
     {% block content %}
 
     {% endblock %}
