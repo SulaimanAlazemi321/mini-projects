@@ -1,0 +1,205 @@
+{% extends "Template/layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light py-5">
+  <div class="card shadow-lg border-0" style="width: 100%; max-width: 600px;">
+    <div class="card-body p-5">
+      <!-- Form Header -->
+      <div class="text-center mb-4">
+        <div class="mb-3">
+          <i class="bi bi-plus-circle text-success" style="font-size: 3rem;"></i>
+        </div>
+        <h2 class="text-success fw-bold mb-2">Add New Eco-Facility</h2>
+        <p class="text-muted">Share a sustainable facility with our community</p>
+      </div>
+
+      <!-- Add Facility Form -->
+      <form id="facilityForm">
+        <!-- Facility Basic Information -->
+        <div class="mb-4">
+          <h5 class="text-success mb-3">
+            <i class="bi bi-building me-2"></i>
+            Facility Information
+          </h5>
+          
+          <div class="mb-3">
+            <label for="facilityTitle" class="form-label fw-semibold">
+              <i class="bi bi-tag me-2"></i>Facility Title
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="facilityTitle" 
+              placeholder="Enter facility name"
+              required
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="facilityCategory" class="form-label fw-semibold">
+              <i class="bi bi-grid me-2"></i>Category
+            </label>
+            <select class="form-control" id="facilityCategory" required>
+              <option value="">Select a category</option>
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="facilityDescription" class="form-label fw-semibold">
+              <i class="bi bi-file-text me-2"></i>Description
+            </label>
+            <textarea 
+              class="form-control" 
+              id="facilityDescription" 
+              rows="4" 
+              placeholder="Describe the facility and its eco-friendly features"
+              required
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Location Information -->
+        <div class="mb-4">
+          <h5 class="text-success mb-3">
+            <i class="bi bi-geo-alt me-2"></i>
+            Location Details
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="houseNumber" class="form-label fw-semibold">
+                  <i class="bi bi-house-door me-2"></i>House Number
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="houseNumber" 
+                  placeholder="e.g., 123"
+                  required
+                >
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="streetName" class="form-label fw-semibold">
+                  <i class="bi bi-signpost me-2"></i>Street Name
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="streetName" 
+                  placeholder="e.g., Main Street"
+                  required
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="town" class="form-label fw-semibold">
+                  <i class="bi bi-building me-2"></i>Town/City
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="town" 
+                  placeholder="e.g., London"
+                  required
+                >
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="postcode" class="form-label fw-semibold">
+                  <i class="bi bi-mailbox me-2"></i>Postcode
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="postcode" 
+                  placeholder="e.g., SW1A 1AA"
+                  required
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="county" class="form-label fw-semibold">
+              <i class="bi bi-map me-2"></i>County
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="county" 
+              placeholder="e.g., Greater London"
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Coordinates -->
+        <div class="mb-4">
+          <h5 class="text-success mb-3">
+            <i class="bi bi-compass me-2"></i>
+            GPS Coordinates
+          </h5>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="latitude" class="form-label fw-semibold">
+                  <i class="bi bi-geo me-2"></i>Latitude
+                </label>
+                <input 
+                  type="number" 
+                  step="any"
+                  class="form-control" 
+                  id="latitude" 
+                  placeholder="e.g., 51.5074"
+                  required
+                >
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="longitude" class="form-label fw-semibold">
+                  <i class="bi bi-geo me-2"></i>Longitude
+                </label>
+                <input 
+                  type="number" 
+                  step="any"
+                  class="form-control" 
+                  id="longitude" 
+                  placeholder="e.g., -0.1278"
+                  required
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-success btn-lg w-100 mb-3">
+          <i class="bi bi-plus-circle me-2"></i>
+          Add Facility
+        </button>
+      </form>
+
+      <!-- Form Footer -->
+      <div class="text-center">
+        <p class="mb-0 text-muted small">
+          <i class="bi bi-info-circle me-1"></i>
+          Help us build a comprehensive directory of eco-friendly facilities
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

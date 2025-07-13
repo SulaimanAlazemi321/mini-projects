@@ -1,17 +1,18 @@
-
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Body
 from pydantic import BaseModel, Field
 from passlib.context import CryptContext
 from Models.database import local_session
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
-from Models.model import ecoUser
+from Models.model import ecoUser, ecoCategories, ecoFacilities, ecoFacilityStatus, ecoUsertypes
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.templating import Jinja2Templates
 from jose import jwt, JWTError  
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime, timezone, timedelta
-from fastapi.middleware.cors import CORSMiddleware	    
+from sqlalchemy import or_
+
+
 
 
 ALGORITHM = "HS256"
@@ -46,6 +47,7 @@ def getDB():
 
 dbDependency = Annotated[Session, Depends(getDB)]
 
+
 class user_schema(BaseModel):
     username : str = Field(min_length=3 , max_length=30)
     password : str = Field(min_length=8 , max_length=50)
@@ -75,11 +77,34 @@ class Login_schema(BaseModel):
 
 @router.post("/liveSearch")
 async def liveSearch(db: dbDependency, theQuery : Search_schema):  
-    return db.query(ecoUser).filter(ecoUser.username.like(f"%{theQuery.query}%")).all()
+    ecoFacility =  db.query(ecoFacilities, ecoCategories.name, ecoUser.username).join(
+        ecoUser, ecoFacilities.contributor == ecoUser.id).join(
+            ecoCategories, ecoFacilities.category == ecoCategories.id
+        ).filter(
+            or_(ecoUser.username.like(f"%{theQuery.query}%"),
+                ecoFacilities.title.like(f"%{theQuery.query}%"),
+                ecoCategories.name.like(f"%{theQuery.query}%")
+                )
+                ).limit(5).all()
+    result = []
+    for facility_data in ecoFacility:
+        ecoFacilityObject = facility_data[0]
+        categoryName = facility_data[1]
+        contributorName = facility_data[2]        
 
+        result.append({
+            "ecoTitle" : ecoFacilityObject.title,
+            "ecoDescription": ecoFacilityObject.description,
+            "categoryName": categoryName,
+            "contributorName": contributorName
+        })
+
+    return result
 
 @router.post("/addEcoUser", status_code=status.HTTP_201_CREATED)
 async def addEcoUser(db: dbDependency, user : user_schema):
+   
+    
     new_User = ecoUser(
         username = user.username,
         password = pass_hasher.hash(user.password),
@@ -103,9 +128,9 @@ async def getEcoUsers(db: dbDependency):
 async def ecoUserLogin(db: dbDependency,user: user_schema):
     username = db.query(ecoUser).filter(user.username == ecoUser.username).first()
     if username and pass_hasher.verify(user.password, username.password):
-        return {"seccuss": "your logged in"}
+        return {"success": "Logged in successfully"}
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail= "invalid username or password")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid username or password")
     
 @router.get("/getHomePage", status_code= status.HTTP_200_OK)
 async def getHomePage(req: Request):
@@ -158,3 +183,54 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 
+
+class EcoFacility_schema(BaseModel):
+
+    title: str = Field(min_length=1 , max_length=30)
+    category: int = Field(  gt=0)
+    description: str = Field(min_length=1,  max_length=100)
+    houseNumber: str = Field(min_length=1,  max_length=30)
+    streetName: str = Field(min_length=1 , max_length=30)
+    county: str =Field(min_length=1 , max_length=30)
+    town: str = Field(min_length=1 , max_length=30)
+    postcode: str = Field(min_length=1 , max_length=30)
+    lng: float 
+    lat: float
+    
+
+
+
+@router.post("/addEcoFacility", status_code=status.HTTP_201_CREATED)
+async def addEcoFacility(ecoFac: EcoFacility_schema, db: dbDependency):
+    # Sanitize all text inputs to prevent XSS attacks
+  
+
+    
+    newFacility = ecoFacilities(
+        title = ecoFac.title,
+        category = ecoFac.category,
+        description = ecoFac.description,
+        houseNumber = ecoFac.houseNumber,
+        streetName = ecoFac.streetName,
+        county = ecoFac.county,
+        town = ecoFac.town,
+        postcode = ecoFac.postcode,
+        lng = ecoFac.lng,
+        lat = ecoFac.lat,
+        contributor = 2
+    )
+
+    try:
+        
+        db.add(newFacility)
+        db.commit()
+        return {"detail": "Facility created successfully"}
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="database error")
+
+
+
+@router.get("/getEcoFacility")
+async def getEcoFacility(db: dbDependency):
+    return db.query(ecoFacilities).all()

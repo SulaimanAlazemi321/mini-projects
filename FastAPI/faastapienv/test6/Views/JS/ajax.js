@@ -1,148 +1,135 @@
-loginButton = document.getElementById('loginBtn')
-submitButton = document.getElementById("idBTN")
+// Simple notification function
+function showNotification(message, type = 'info') {
+  alert(message);
+}
 
-async function sendUserPassword() {
-  const username = document.getElementById('user').value;
-  const password = document.getElementById('pwd').value;   
+// Search functionality
+function initializeSearch() {
+  const searchInput = document.getElementById("search");
+  const resultsDiv = document.getElementById("searchResults");
+  
+  if (!searchInput || !resultsDiv) return;
+
+  searchInput.addEventListener("input", async function() {
+    const q = this.value.trim();
+    
+    if (!q) {
+      resultsDiv.classList.add("d-none");
+      return;
+    }
+
+    try {
+      const response = await fetch("/ecoUser/liveSearch", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({query: q})
+      });
+      
+      const data = await response.json();
+      let html = "";
+      
+      if (data.length > 0) {
+        data.forEach(facility => {
+          html += `
+            <div class="p-3 border-bottom">
+              <h6 class="mb-1">${facility.ecoTitle}</h6>
+              <small class="text-muted">Category: ${facility.categoryName} | By: ${facility.contributorName}</small>
+              <p class="mb-0 small">${facility.ecoDescription}</p>
+            </div>`;
+        });
+      } else {
+        html = `<div class="p-3 text-center text-muted">No results found for "${q}"</div>`;
+      }
+      
+      resultsDiv.innerHTML = html;
+      resultsDiv.classList.remove("d-none");
+      
+    } catch (error) {
+      console.error("Search error:", error);
+    }
+  });
+
+  // Hide search results when clicking outside
+  document.addEventListener("click", function(e) {
+    if (!e.target.closest("#search") && !e.target.closest("#searchResults")) {
+      resultsDiv.classList.add("d-none");
+    }
+  });
+}
+
+// Login function
+async function sendUserPassword(event) {
+  event.preventDefault();
+  const username = document.getElementById('usrname').value;
+  const password = document.getElementById('passwd').value;
 
   try {
-    const r = await fetch('/ecoUser/ecoUserLogin', {
+    const response = await fetch('/ecoUser/ecoUserLogin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ "username": username, "password": password })
     });
 
-    const data = await r.json();          
+    const data = await response.json();
 
-    if (r.ok) {
-      // Success (status 200)
-      alert('Logged in successfully!');
+    if (response.ok) {
+      showNotification('Logged in successfully!');
+      setTimeout(() => window.location.href = '/', 1500);
     } else {
-      // Error (status 4xx, 5xx)
-      if (typeof data.detail === 'string') {
-        // Simple error message
-        alert(data.detail);
-      } else if (Array.isArray(data.detail)) {
-        // Validation errors
-        const errorMessages = data.detail.map(err => err.msg).join('\n');
-        alert('Validation errors:\n' + errorMessages);
-      } else {
-        alert('Login failed. Please try again.');
-      }
+      showNotification('Login failed: ' + (data.detail || 'Please try again'));
     }
   } catch (error) {
-    console.error('Login error:', error);
-    alert('Network error. Please try again.');
+    showNotification('Network error. Please try again.');
   }
 }
 
-loginButton.addEventListener('click', sendUserPassword);
+// Add facility function
+async function addEcoFacility(event) {
+  event.preventDefault();
 
+  const facilityData = {
+    title: document.getElementById("facilityTitle").value,
+    category: parseInt(document.getElementById("facilityCategory").value),
+    description: document.getElementById("facilityDescription").value,
+    houseNumber: document.getElementById("houseNumber").value,
+    streetName: document.getElementById("streetName").value,
+    county: document.getElementById("county").value,
+    town: document.getElementById("town").value,
+    postcode: document.getElementById("postcode").value,
+    lng: parseFloat(document.getElementById("longitude").value),
+    lat: parseFloat(document.getElementById("latitude").value)
+  };
 
-// async function getUsers() {
-//   try {
-//     const r = await fetch("/ecoUser/getEcoUsers");
-//     const data = await r.json();
-
-//     let output = `
-//       <div class="row fw-bold border-bottom pb-2">
-//         <div class="col-4">Username</div>
-//         <div class="col-4">Password</div>
-//         <div class="col-4">Role</div>
-//       </div>
-//     `;
-
-//     data.forEach(user => {
-//       output += `
-//         <div class="row py-2 border-bottom">
-//           <div class="col-4">${user.username}</div>
-//           <div class="col-4 text-break">${user.password}</div>
-//           <div class="col-4">${user.role}</div>
-//         </div>
-//       `;
-//     });
-
-//     document.getElementById("out").innerHTML = output;
-//   } catch (error) {
-//     console.error("Error fetching users:", error);
-//     document.getElementById("out").textContent = "Error loading users.";
-//   }
-// }
-
-
-
-// addEventListener("DOMContentLoaded", getUsers)
-
-
-
-
-async function addUser(event) {
-   event.preventDefault()
-   let username = document.getElementById("usrname").value
-   let password = document.getElementById("passwd").value
-   let userType = parseInt(document.getElementById("userType").value)  // CHANGED: role -> userType (convert to int)
-
-   const body = JSON.stringify({ username, password, userType})  // CHANGED: role -> userType
-
-   const r = await fetch("/ecoUser/addEcoUser",{
+  try {
+    const response = await fetch("/ecoUser/addEcoFacility", {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
-      body 
-   })
+      body: JSON.stringify(facilityData)
+    });userFormlogin
 
-   if (r.status == 201)
-   {
-      alert("user is created")
-   }else
-   {
-      alert("user is not created")
-   }  
+    if (response.status === 201) {
+      showNotification('EcoFacility added successfully!');
+      setTimeout(() => window.location.href = '/', 1500);
+    } else {
+      showNotification('Failed to add EcoFacility.');
+    }
+  } catch (error) {
+    showNotification('Error adding facility.');
+  }
 }
 
-document.getElementById("userForm").addEventListener("submit", addUser)
+// Initialize search functionality
+initializeSearch();
 
+// Initialize form event listeners
+const userFormlogin = document.getElementById('userFormlogin');
+const facilityForm = document.getElementById("facilityForm");
 
-async function liveSearch () {
-  const q = document.getElementById("search").value;
-
-  const r   = await fetch("/ecoUser/liveSearch", {
-    method : "POST",
-    headers: {"Content-Type": "application/json"},
-    body   : JSON.stringify({query: q})
-  });
-  const data = await r.json();
-
-  const box = document.getElementById("searchResults");
-  let html  = "";
-
-  if (data.length) {         
-    html += `
-      <div class="row fw-bold border-bottom pb-2">
-        <div class="col-4">Username</div>
-        <div class="col-4">User Type</div>
-      </div>`;
-    data.forEach(u => {
-      html += `
-        <div class="row py-2 border-bottom">
-          <div class="col-4">${u.username}</div>
-          <div class="col-4">${u.userType}</div>
-        </div>`;  // CHANGED: role -> userType
-    });
-    box.classList.remove("d-none");   
-  } else {
-    box.classList.add("d-none");      
-  }
-  box.innerHTML = html;              
+if (userFormlogin) {
+  userFormlogin.addEventListener("submit", sendUserPassword);
 }
-document.getElementById("search").addEventListener("input", liveSearch);
 
+if (facilityForm) {
+  facilityForm.addEventListener("submit", addEcoFacility);
+}
 
-document.addEventListener("click", e => {
-  const input = document.getElementById("search");
-  const box   = document.getElementById("searchResults");
-
-  if (!input.contains(e.target) && !box.contains(e.target)) {
-    box.innerHTML = "";      
-    box.classList.add("d-none"); 
-  }
-});

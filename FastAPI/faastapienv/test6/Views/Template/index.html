@@ -1,60 +1,131 @@
-{% include 'Template/layout.html' %}
+{% extends 'Template/layout.html' %}
 
-<div class="container mt-5">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h4 class="card-title mb-4 text-center">User Information</h4>
-      <form id="userForm">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control" id="usrname" placeholder="Enter username">
-        </div>
-
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="passwd" placeholder="Enter password">
-        </div>
-
-            <div class="mb-3">
-          <label for="userType" class="form-label">User Type</label>
-          <select class="form-select" id="userType">
-            <option value="1">User</option>
-            <option value="2">Manager</option>
-          </select>
-        </div>  <!-- CHANGED: role -> userType, values to integers -->
-
-
-        <button type="submit" id="submitBtn" class="btn btn-primary w-100">Submit</button>
-      </form>
+{% block content %}
+<div class="container mt-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-success mb-0">
+          <i class="bi bi-geo-alt me-2"></i>
+          Eco Facilities Directory
+        </h2>
+        <span class="badge bg-success fs-6 px-3 py-2 rounded-pill">
+          {{ facilities|length }} Facilities
+        </span>
+      </div>
+      <hr class="text-success">
     </div>
   </div>
 
- 
-<div class="mt-4">
-  <button id="loadBtn" class="btn btn-secondary mb-3">Load users</button>
-  
-  <div class="container" id="out">
-    <!-- Dynamic content will be inserted here -->
+  <!-- Desktop Table View -->
+  <div class="d-none d-lg-block">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-success">
+          <tr>
+            <th><i class="bi bi-building me-1"></i> Facility</th>
+            <th><i class="bi bi-tags me-1"></i> Category</th>
+            <th><i class="bi bi-file-text me-1"></i> Description</th>
+            <th><i class="bi bi-geo-alt me-1"></i> Location</th>
+            <th><i class="bi bi-person me-1"></i> Contributor</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for facility_data in facilities %}
+          <tr>
+            <td>
+              <strong>{{ facility_data[0].title }}</strong>
+            </td>
+            <td>
+              <span class="badge bg-light text-success border border-success">
+                {{ facility_data[1] }}
+              </span>
+            </td>
+            <td>
+              <span class="text-muted">{{ facility_data[0].description }}</span>
+            </td>
+            <td>
+              <div class="small">
+                <div>{{ facility_data[0].houseNumber }} {{ facility_data[0].streetName }}</div>
+                <div class="text-muted">{{ facility_data[0].town }}, {{ facility_data[0].postcode }}</div>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <i class="bi bi-person-circle text-primary me-2"></i>
+                <span>{{ facility_data[2] }}</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
+
+  <!-- Mobile Card View -->
+  <div class="d-lg-none">
+    <div class="row g-3">
+      {% for facility_data in facilities %}
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h5 class="card-title text-success mb-0">
+                <i class="bi bi-building me-2"></i>
+                {{ facility_data[0].title }}
+              </h5>
+              <span class="badge bg-light text-success border border-success">
+                {{ facility_data[1] }}
+              </span>
+            </div>
+            
+            <p class="card-text text-muted mb-3">
+              {{ facility_data[0].description }}
+            </p>
+            
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <div class="small">
+                  <i class="bi bi-geo-alt text-muted me-1"></i>
+                  <strong>Location:</strong>
+                </div>
+                <div class="small text-muted">
+                  {{ facility_data[0].houseNumber }} {{ facility_data[0].streetName }}<br>
+                  {{ facility_data[0].town }}, {{ facility_data[0].postcode }}
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="small">
+                  <i class="bi bi-person text-muted me-1"></i>
+                  <strong>Contributor:</strong>
+                </div>
+                <div class="small text-muted">
+                  {{ facility_data[2] }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  {% if not facilities %}
+  <div class="text-center py-5">
+    <div class="mb-4">
+      <i class="bi bi-geo-alt text-muted" style="font-size: 4rem;"></i>
+    </div>
+    <h4 class="text-muted mb-3">No facilities found</h4>
+    <p class="text-muted mb-4">There are currently no eco-facilities to display.</p>
+    <a href="/addFacility" class="btn btn-success">
+      <i class="bi bi-plus-circle me-2"></i>
+      Add First Facility
+    </a>
+  </div>
+  {% endif %}
 </div>
-
-
-<div class="container mt-4">
-  <div class="row fw-bold border-bottom pb-2">
-    <div class="col-2">Facility Title</div>
-    <div class="col-2">Category</div>
-    <div class="col-3">Description</div>
-    <div class="col-3">Location</div>
-    <div class="col-2">Contributor</div>  <!-- FIXED: 5 columns with proper Bootstrap grid (2+2+3+3+2=12) -->
-  </div>
-
-  {% for facility_data in facilities %}
-  <div class="row py-2 border-bottom">
-    <div class="col-2">{{ facility_data[0].title }}</div>
-    <div class="col-2">{{ facility_data[1] }}</div>  <!-- Category name -->
-    <div class="col-3">{{ facility_data[0].description }}</div>
-    <div class="col-3">{{ facility_data[0].houseNumber }} {{ facility_data[0].streetName }}, {{ facility_data[0].town }}, {{ facility_data[0].postcode }}</div>  <!-- FIXED: Better address format -->
-    <div class="col-2">{{ facility_data[2] }}</div>  <!-- Contributor name -->
-  </div>
-  {% endfor %}
-</div>
+{% endblock %}
