@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-4">Submit your name</h4>
+      <form method="POST" id="reverseNameForm" >
+        <div class="mb-3">
+          <label for="reverseNameInput" class="form-label">Enter Name</label>
+          <input type="text" class="form-control" name="reverseNameInput" id="reverseNameInput" placeholder="e.g. Ahmad">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">send</button>
+      </form>
+      
+      <h1 id="outputReverseName"></h1>
+    </div>
+  </div>
+</div>
+{% endblock %}

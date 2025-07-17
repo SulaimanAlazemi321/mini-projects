@@ -1,0 +1,16 @@
+{% include 'layout.html' %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-4">Submit your name</h4>
+      <form method="POST" id="nameByIDForm", action="/person/submit-name" >
+        <div class="mb-3">
+          <label for="ID" class="form-label">Enter Name</label>
+          <input type="text" class="form-control" name="nameInput" id="nameInput" placeholder="e.g. Ahmad">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">send</button>
+      </form>
+
+      {%if name%}
+    <h1> Thanks {{name}}</h1>
+      {%endif%}

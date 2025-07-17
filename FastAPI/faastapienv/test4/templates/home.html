@@ -1,13 +1,7 @@
 {% include 'layout.html' %}
 
-<h1 id="test1">Welcome to the start</h1>
-
-<form method="GET" action="/person/">
-  <label for="username">Enter your name:</label>
-  <input type="text" id="username" name="username" required>
-  <button type="submit">Submit</button>
-</form>
-
 {% if username %}
-<h1>Hello {{username}}</h1>
-{% endif %}
+<h1>welcome {{username}}</h1>
+{% else%}
+<h1>no name given</h1>
+{%endif%}

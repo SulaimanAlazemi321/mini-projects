@@ -2,7 +2,7 @@ from database import localSession
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from model import Person
-from fastapi import APIRouter, Path, Query, Depends, HTTPException, status, Request, Form
+from fastapi import APIRouter, Path, Query, Depends, HTTPException, status, Request, Form, Body
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from pydantic import BaseModel, Field
 from fastapi.templating import Jinja2Templates
@@ -11,6 +11,8 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import text
+from fastapi.responses import RedirectResponse
+
 
 template = Jinja2Templates(directory="templates")
 pass_hasher = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -76,9 +78,8 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @router.get("/getAllpersons")
 async def getAllData(db : db_dependency):
-    return db.query(Person).all()
-
-
+    persons = db.query(Person).all()
+    return persons
 
 @router.get("/getpersonByID/{personID}")
 async def getpersonByID(db : db_dependency, personID : int = Path(gt=0)):
@@ -128,7 +129,7 @@ async def updateDataByID(db : db_dependency, person : personSchema, personID : i
         raise HTTPException(status_code=400, detail="Email already exists")
    
     foundperson.email = person.email
-    foundperson.name = person.name
+    foundperson.name = person.nameshow
     foundperson.age = person.age
     foundperson.hashPassword = pass_hasher.hash(person.password)
     foundperson.isActive = person.isActive
@@ -141,7 +142,10 @@ async def updateDataByID(db : db_dependency, person : personSchema, personID : i
     return {"seccuss": "person updated"}
     
     
-
+@router.get("/nameByID")
+async def getNameByID(req: Request, db: db_dependency):
+    people = await getAllData(db)
+    return template.TemplateResponse("getNameByID.html", {"request": req, "people": people})
 
 @router.delete("/Deleteperson/{personID}")
 async def deleteperson(db: db_dependency, personID : int):
@@ -152,6 +156,21 @@ async def deleteperson(db: db_dependency, personID : int):
         return {"seccuss": "person deleted"}
     
     raise HTTPException(status_code=404, detail="person id not found")
+
+
+class nameByID(BaseModel):
+    ID : int
+
+
+@router.post("/getNameByID")
+async def getNameByID(ID: nameByID, db: db_dependency):
+    
+    dataToReturn = db.query(Person).filter(Person.id == ID.ID).first()
+
+    if dataToReturn:
+        return dataToReturn
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -249,16 +268,12 @@ def update_phone_number(user : user_dependency, db : db_dependency, newNumber : 
 async def login(request: Request):
     return template.TemplateResponse("login.html", {"request": request})
 
-@router.get("/")
-async def test(request : Request, username : Optional[str] = None):
-    return template.TemplateResponse("home.html", {"request": request, "username": username})
-
-
 
 @router.get("/all")
 async def getAllUsers(req: Request, db: db_dependency):
     users = await getAllData(db)
     return template.TemplateResponse("/showPeople.html", {"request": req, "users": users})
+template = Jinja2Templates(directory="templates")
 
 @router.get("/add")
 async def test(request : Request):
@@ -296,3 +311,34 @@ async def add_person(
     return template.TemplateResponse("addperson.html", {"request": request, "message": message})
 
 
+@router.get("/")
+async def getUsername(req: Request):
+    return template.TemplateResponse("home.html", {"request": req, "username": "Sulaiman"})
+
+
+
+@router.get("/form")
+async def getUsername(req: Request, name: Optional[str] = None):
+    return template.TemplateResponse("form.html", {"request": req, "name": name})
+
+@router.post("/submit-name")
+def returnName(nameInput: str = Form(...)):
+    return RedirectResponse(url=f"/person/form?name={nameInput}", status_code=303)
+
+
+
+
+
+
+class getName(BaseModel):
+    name : str
+
+
+@router.post("/api/reverse")
+async def reverseLetter(name: getName):
+    reverseName = name.name[::-1]
+    return {"reverseName": reverseName}   
+    
+@router.get("/api/reverse")
+async def reverseLetter(req: Request):
+    return template.TemplateResponse("reverseName.html", {"request": req,})
