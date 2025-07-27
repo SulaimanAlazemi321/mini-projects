@@ -73,6 +73,57 @@ class Login_schema(BaseModel):
     password : str = Field(min_length=8 , max_length=50)
 
 
+class deleteFacility_schema(BaseModel):
+    id: int
+
+@router.post("/deleteUser")
+async def deleteUser(facility: deleteFacility_schema, db: dbDependency):
+    deletedUser = db.query(ecoFacilities).filter(ecoFacilities.id == facility.id).first()
+    db.delete(deletedUser)
+    db.commit()
+
+
+
+class UpdateFacility_schema(BaseModel):
+    id: int
+    title: str = Field(min_length=1, max_length=30)
+    category: int = Field(gt=0)
+    description: str = Field(min_length=1, max_length=100)
+    houseNumber: str = Field(min_length=1, max_length=30)
+    streetName: str = Field(min_length=1, max_length=30)
+    county: str = Field(min_length=1, max_length=30)
+    town: str = Field(min_length=1, max_length=30)
+    postcode: str = Field(min_length=1, max_length=30)
+    lng: float 
+    lat: float
+
+@router.post("/updateFacility")
+async def updateFacility(facility: UpdateFacility_schema, db: dbDependency):
+    try:
+        # Find the existing facility
+        existing_facility = db.query(ecoFacilities).filter(ecoFacilities.id == facility.id).first()
+        
+        if not existing_facility:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Facility not found")
+        
+        # Update the facility fields
+        existing_facility.title = facility.title
+        existing_facility.category = facility.category
+        existing_facility.description = facility.description
+        existing_facility.houseNumber = facility.houseNumber
+        existing_facility.streetName = facility.streetName
+        existing_facility.county = facility.county
+        existing_facility.town = facility.town
+        existing_facility.postcode = facility.postcode
+        existing_facility.lng = facility.lng
+        existing_facility.lat = facility.lat
+        
+        db.commit()
+        return {"detail": "Facility updated successfully"}
+        
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error")
 
 
 @router.post("/liveSearch")

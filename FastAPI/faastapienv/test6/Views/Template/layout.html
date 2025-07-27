@@ -55,22 +55,22 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              {% if request.query_params.get('contributor') %}
-                <a class="dropdown-item" href="/?contributor={{ request.query_params.get('contributor') }}">All Categories</a>
-              {% else %}
-                <a class="dropdown-item" href="/">All Categories</a>
-              {% endif %}
+            {% if request.query_params.get('contributor') %}
+              <a class="dropdown-item" href="?page=1&contributor={{ request.query_params.get('contributor') }}">All Categories</a>
+            {% else %}
+              <a class="dropdown-item" href="/">All Categories</a>
+            {% endif %}
             </li>
             <li><hr class="dropdown-divider"></li>
-            {% for category in categories %}
-            <li>
-              {% if request.query_params.get('contributor') %}
-                <a class="dropdown-item" href="/?category={{category.id}}&contributor={{ request.query_params.get('contributor') }}">{{category.name}}</a>
-              {% else %}
-                <a class="dropdown-item" href="/?category={{category.id}}">{{category.name}}</a>
-              {% endif %}
-            </li>
-            {% endfor %}
+        {% for category in categories %}
+          <li>
+            {% if request.query_params.get('contributor') %}
+              <a class="dropdown-item" href="?page=1&category={{category.id}}&contributor={{ request.query_params.get('contributor') }}">{{category.name}}</a>
+            {% else %}
+              <a class="dropdown-item" href="?page=1&category={{category.id}}">{{category.name}}</a>
+            {% endif %}
+          </li>
+          {% endfor %}
           </ul>
         </li>
         
@@ -89,19 +89,18 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              {% if request.query_params.get('category') %}
-                <a class="dropdown-item" href="/?category={{ request.query_params.get('category') }}">All Contributors</a>
-              {% else %}
-                <a class="dropdown-item" href="/">All Contributors</a>
-              {% endif %}
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            {% for user in ecoUsers %}
+            {% if request.query_params.get('category') %}
+              <a class="dropdown-item" href="?page=1&category={{ request.query_params.get('category') }}">All Contributors</a>
+            {% else %}
+              <a class="dropdown-item" href="/">All Contributors</a>
+            {% endif %}
+                        </li>
+           {% for user in ecoUsers %}
             <li>
               {% if request.query_params.get('category') %}
-                <a class="dropdown-item" href="/?contributor={{user.id}}&category={{ request.query_params.get('category') }}">{{user.username}}</a>
+                <a class="dropdown-item" href="?page=1&contributor={{user.id}}&category={{ request.query_params.get('category') }}">{{user.username}}</a>
               {% else %}
-                <a class="dropdown-item" href="/?contributor={{user.id}}">{{user.username}}</a>
+                <a class="dropdown-item" href="?page=1&contributor={{user.id}}">{{user.username}}</a>
               {% endif %}
             </li>
             {% endfor %}
