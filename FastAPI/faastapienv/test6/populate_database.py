@@ -87,7 +87,7 @@ def populate_facilities():
             street_name = random.choice(street_names)
             town = random.choice(uk_towns)
             county = random.choice(uk_counties)
-            postcode = generate_postcode()
+            postcode = generate_postcode()e
             contributor_id = random.choice(users).id
             
             # Generate realistic UK coordinates
