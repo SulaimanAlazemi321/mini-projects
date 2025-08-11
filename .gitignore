@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual envs
+.venv/
+venv/
+env/
+ENV/
+faastapienv/
+
+# Logs / artifacts
+*.log
+*.ndjson
+logs/
+SIEM/siem/*.log
+
+# Elastic Beats runtime data
+elasticsearch/beats/*/data/
+elasticsearch/beats/*/logs/
+
+# Wordlists (keep these outside repo)
+wordlists/
+rockyou*
+SecLists/
