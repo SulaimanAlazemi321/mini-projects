@@ -60,7 +60,6 @@ if (form) {
       });
 
       if (response.status === 401) {
-        alert("Please login to save your reflection.");
         window.location.href = "/login";
         return;
       }

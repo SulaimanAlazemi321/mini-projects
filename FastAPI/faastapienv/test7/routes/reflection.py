@@ -24,7 +24,7 @@ class Reflection_ID_Schema(BaseModel):
 
 class Reflection_Reflection_Schema(BaseModel):
     reflection: str = Field(min_length=2)
-    title: Optional[str] = None  # Add optional title field
+    title: Optional[str] = None  
 
     model_config={"json_schema_extra": {
         "example": {

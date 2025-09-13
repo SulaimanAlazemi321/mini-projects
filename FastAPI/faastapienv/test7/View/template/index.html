@@ -35,11 +35,6 @@
             {% endif %}
             {% if user %}
               <p class="text-secondary mb-0">Write freely. It's just for you.</p>
-            {% else %}
-              <p class="text-warning mb-0">
-                <i class="fas fa-info-circle"></i> 
-                You can browse and try writing, but <a href="/login" class="text-warning">login</a> to save your reflections.
-              </p>
             {% endif %}
           </div>
 
@@ -51,8 +46,7 @@
                         class="form-control bg-black text-light border-secondary"
                         rows="6"
                         required
-                        autofocus
-                        {% if not user %}placeholder="Try writing here... (login to save your reflections)"{% endif %}></textarea>
+                        autofocus></textarea>
               <div class="invalid-feedback">Please write a short reflection.</div>
             </div>
 
@@ -61,7 +55,7 @@
                 {% if user %}
                   ✨ Save Reflection
                 {% else %}
-                  ✨ Try Writing (Login to Save)
+                  ✨ Login ^_^
                 {% endif %}
               </button>
             </div>

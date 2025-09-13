@@ -9,6 +9,8 @@ from fastapi.templating import Jinja2Templates
 import random
 from .user import get_current_user
 from jose import jwt, JWTError
+from .user import SECRET_KEY, ALGORITHM
+
 
 router = APIRouter(
     tags=["view"],
@@ -32,13 +34,7 @@ async def get_current_user_optional(access_token: str = Cookie(None)):
         return None
     
     try:
-        # Use the same logic as your get_current_user but don't raise exceptions
-        token = access_token.replace("Bearer ", "") if access_token.startswith("Bearer ") else access_token
-        
-        # Import these from your user.py file
-        from .user import SECRET_KEY, ALGORITHM
-        
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         user_id: int = payload.get("id")
         role: str = payload.get("role") or "user"
@@ -54,7 +50,12 @@ optionalUserDepends = Annotated[Optional[dict], Depends(get_current_user_optiona
 @router.get("/")
 async def index(req: Request, db: dbDepends, user: optionalUserDepends):
     questions = db.query(Question).all()
-    question_text = random.choice(questions).question if questions else "What's on your mind today?"
+    if questions:
+        question_text = random.choice(questions).question
+    elif not user:
+        question_text = "Free Your Mind"
+    else:
+        question_text = "press to change the title"
     
     # Only get reflections if user is logged in
     if user:
