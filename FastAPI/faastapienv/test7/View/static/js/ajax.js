@@ -1,13 +1,10 @@
-// Add new reflection to list (with user's local time)
 function addNewReflection(text, id) {
   const list = document.querySelector('.list-group-flush');
   if (!list) return;
 
-  // Remove "no reflections" message
   const emptyMsg = list.querySelector('li:has(.text-secondary)');
   if (emptyMsg?.textContent.includes('No reflections')) emptyMsg.remove();
 
-  // Format user's local date/time
   const userDateTime = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long', 
@@ -22,14 +19,13 @@ function addNewReflection(text, id) {
     <li class="list-group-item bg-dark text-light border-secondary" id="reflection-item-${id}">
       <div class="small text-secondary">${userDateTime}</div>
       <p id="reflection-text-${id}" class="mb-0">${text}</p>
-      <button class="btn btn-sm btn-outline-secondary me-2" onclick="editReflection(${id})">edit</button>
+      <button class="btn btn-sm btn-outline-secondary me-2" onclick="edit_reflection(${id})">edit</button>
       <button class="btn btn-sm btn-outline-danger" onclick="deleteReflection(${id})">delete</button>
     </li>
   `);
 }
 
-// Modified form submission to send user's timestamp
-// Helper function to format user's local date/time
+
 function getUserDateTime() {
   return new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -41,7 +37,6 @@ function getUserDateTime() {
   });
 }
 
-// Modified form submission (much cleaner)
 const form = document.getElementById("reflectionForm");
 if (form) {
   form.addEventListener("submit", async (e) => {
@@ -60,6 +55,7 @@ if (form) {
       });
 
       if (response.status === 401) {
+        alert("Please login to save your reflection.");
         window.location.href = "/login";
         return;
       }
@@ -67,7 +63,6 @@ if (form) {
       if (!response.ok) return;
 
       const data = await response.json();
-      // Use the title returned from the server
       addNewReflection(data.reflection, data.id, data.title);
       form.reset();
     } catch (error) {
@@ -76,21 +71,18 @@ if (form) {
   });
 }
 
-// Updated function to accept the actual saved title
 function addNewReflection(text, id, savedTitle) {
   const list = document.querySelector('.list-group-flush');
   if (!list) return;
 
-  // Remove "no reflections" message
   const emptyMsg = list.querySelector('li:has(.text-secondary)');
   if (emptyMsg?.textContent.includes('No reflections')) emptyMsg.remove();
 
-  // Use the actual saved title instead of generating new one
   list.insertAdjacentHTML('afterbegin', `
     <li class="list-group-item bg-dark text-light border-secondary" id="reflection-item-${id}">
       <div class="small text-secondary">${savedTitle}</div>
       <p id="reflection-text-${id}" class="mb-0">${text}</p>
-      <button class="btn btn-sm btn-outline-secondary me-2" onclick="editReflection(${id})">edit</button>
+      <button class="btn btn-sm btn-outline-secondary me-2" onclick="edit_reflection(${id})">edit</button>
       <button class="btn btn-sm btn-outline-danger" onclick="deleteReflection(${id})">delete</button>
     </li>
   `);
@@ -120,9 +112,7 @@ const delete_reflection = async (reflection_id) => {
   }
 }
 
-// document.getElementById("update_reflection_btn").addEventListener("click", () => {
 
-// })
 
 const update_reflection = async (reflection_id, reflection_reflection) => {
   try{
@@ -194,18 +184,18 @@ loginForm.addEventListener("submit", async (e) => {
         username: username,
         password: password
       }),
-      credentials: 'include' // Important: includes cookies
+      credentials: 'include' 
     });
 
     if (response.ok) {
       const data = await response.json();
-      console.log("✅ Success:", data);
+      console.log("Success:", data);
       window.location.href = "/"
     } else {
-      console.log("❌ Failed:", response.status, response.statusText);
+      console.log(" Failed:", response.status, response.statusText);
     }
   } catch (error) {
-    console.error("⚠️ Error:", error);
+    console.error(" Error:", error);
   }
 });
 }
@@ -217,8 +207,6 @@ function logout() {
     credentials: 'include'
   }).then(() => {
     window.location.href = '/';
-  }).catch(() => {
-    // If logout endpoint doesn't exist, just redirect
-    window.location.href = '/';
+  }).catch(() => {    window.location.href = '/';
   });
 }
