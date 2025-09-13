@@ -11,7 +11,7 @@ from jose.exceptions import ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 from fastapi import Cookie, Response
 from fastapi.responses import JSONResponse
-from .config import settings   # 👈 import settings, not env vars directly
+from .config import settings   
 
 router = APIRouter(
     tags=["User"],
@@ -81,13 +81,12 @@ async def login_for_access(form_data: Annotated[OAuth2PasswordRequestForm, Depen
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="could not validate user")
 
     token = create_access_token(user.username, user.id, user.role, timedelta(minutes= ACCESS_TOKEN_EXPIRE_MINUTES))
- # Set HttpOnly cookie instead of returning token
     response.set_cookie(
         key="access_token",
         value= token,
-        httponly=True,  # Prevents JavaScript access
-        secure=False,    # HTTPS only (set to False for development)
-        samesite="lax", # CSRF protection
+        httponly=True,  
+        secure=False,  
+        samesite="lax", 
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 600
     )
     

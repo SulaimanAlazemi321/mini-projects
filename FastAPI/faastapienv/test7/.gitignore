@@ -1,4 +1,3 @@
-# Ignore environment files
 .env
 *.log
 *.db

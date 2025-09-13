@@ -114,7 +114,7 @@ async def add_reflection(db: dbDepends, reflection_ref: Reflection_Reflection_Sc
 
     new_reflection = Reflection(
         reflection = reflection_ref.reflection,
-        title = reflection_ref.title or "No date",  # Use provided title or simple fallback
+        title = reflection_ref.title or "No date",  
         user_id = user.get("id")
     )
     try:
@@ -124,7 +124,7 @@ async def add_reflection(db: dbDepends, reflection_ref: Reflection_Reflection_Sc
         return {
             "success": "Reflection Added", 
             "id": new_reflection.id,
-            "title": new_reflection.title,  # Return the actual saved title
+            "title": new_reflection.title, 
             "reflection": new_reflection.reflection
         }
     except:
