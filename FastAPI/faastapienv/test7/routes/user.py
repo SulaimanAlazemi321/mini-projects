@@ -101,7 +101,7 @@ def create_access_token(username: str, id: int, role: str, expire_time: timedelt
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-async def get_curre===nt_user(access_token: str = Cookie(None)):
+async def get_current_user(access_token: str = Cookie(None)):
     
     if not access_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="could not validate user (get_current_user)")
