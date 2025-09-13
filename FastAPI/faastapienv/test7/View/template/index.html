@@ -1,0 +1,110 @@
+{% extends "template.html" %}
+{% block content %}
+
+<!-- Top navbar -->
+<nav class="navbar navbar-dark bg-black border-bottom border-secondary sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-semibold text-light" href="#">🌙 Reflections</a>
+    <div>
+      {% if user %}
+        <button class="btn btn-outline-light me-2"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#historyOffcanvas"
+                aria-controls="historyOffcanvas">
+          Past memories
+        </button>
+        <span class="text-light me-2">Hello, {{ user.username }}!</span>
+        <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+      {% else %}
+        <a href="/login" class="btn btn-outline-light">Login</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+      <div class="card bg-dark text-light shadow-lg border border-secondary">
+        <div class="card-body p-4 p-md-5">
+          <div class="mb-4 text-center">
+            {% if question %}
+            <h1 class="h3 mb-1 text-light">{{question}}</h1>
+            {% endif %}
+            {% if user %}
+              <p class="text-secondary mb-0">Write freely. It's just for you.</p>
+            {% else %}
+              <p class="text-warning mb-0">
+                <i class="fas fa-info-circle"></i> 
+                You can browse and try writing, but <a href="/login" class="text-warning">login</a> to save your reflections.
+              </p>
+            {% endif %}
+          </div>
+
+          <form id="reflectionForm" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label for="reflection" class="form-label text-light">Your reflection</label>
+              <textarea id="reflection"
+                        name="reflection"
+                        class="form-control bg-black text-light border-secondary"
+                        rows="6"
+                        required
+                        autofocus
+                        {% if not user %}placeholder="Try writing here... (login to save your reflections)"{% endif %}></textarea>
+              <div class="invalid-feedback">Please write a short reflection.</div>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg" id="submit-reflection">
+                {% if user %}
+                  ✨ Save Reflection
+                {% else %}
+                  ✨ Try Writing (Login to Save)
+                {% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <p class="text-center text-secondary mt-4 mb-0">
+        ✨ Take a deep breath. You're doing great.
+      </p>
+    </div>
+  </div>
+</main>
+
+<!-- Only show offcanvas if user is logged in -->
+{% if user and ref %}
+<!-- Offcanvas: Past reflections -->
+<div class="offcanvas offcanvas-end bg-black text-light" tabindex="-1" id="historyOffcanvas" aria-labelledby="historyLabel">
+  <div class="offcanvas-header border-bottom border-secondary">
+    <h2 class="offcanvas-title h5" id="historyLabel">Past reflections</h2>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <ul class="list-group list-group-flush">
+      {% if ref %}
+        {% for reflection in ref %}
+        <li class="list-group-item bg-dark text-light border-secondary" id="reflection-item-{{reflection.id}}">
+          <div class="small text-secondary">{{ reflection.title }}</div>
+          <p id="reflection-text-{{ reflection.id }}" class="mb-0">{{ reflection.reflection }}</p>
+            <button class="btn btn-sm btn-outline-secondary me-2" onclick="edit_reflection('{{ reflection.id }}')">edit</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="delete_reflection('{{ reflection.id }}')">delete</button>
+        </li>
+        {% endfor %}
+      {% else %}
+        <li class="list-group-item bg-dark text-light border-secondary">
+          <div class="small text-secondary">No reflections yet</div>
+          <p class="mb-0">Write your first reflection</p>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
