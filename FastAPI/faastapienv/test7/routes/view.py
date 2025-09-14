@@ -59,7 +59,7 @@ async def index(req: Request, db: dbDepends, user: optionalUserDepends):
     
     # Only get reflections if user is logged in
     if user:
-        reflection = db.query(Reflection).filter(Reflection.user_id == user.get("id")).order_by(Reflection.title.desc()).all()
+        reflection = db.query(Reflection).filter(Reflection.user_id == user.get("id")).order_by(Reflection.date.desc()).all()
     else:
         reflection = None
     

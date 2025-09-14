@@ -22,7 +22,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
-ACCESS_TOKEN_EXPIRE_MINUTES = 3
+ACCESS_TOKEN_EXPIRE_MINUTES = 3000
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
 
@@ -63,11 +63,13 @@ class User_User_Schema(BaseModel):
 
 
 
+
     model_config={"json_schema_extra": {
         "example": {
             "username": "TheUsername",
             "password": "ThePassword",
-            "role": "TheRole"
+            "role": "TheRole",
+
         }
     }}
 
@@ -142,7 +144,7 @@ async def add_user(db: dbDepends, user_parm: User_User_Schema):
        
         username = user_parm.username,
         hashed_password = pwd_context.hash(user_parm.password),
-        role = user_parm.role
+        role = user_parm.role,
     )
     try:
         db.add(new_user)

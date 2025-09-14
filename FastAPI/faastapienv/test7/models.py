@@ -6,7 +6,8 @@ from sqlalchemy.sql import func
 class Reflection(base):
     __tablename__ = "Reflection"
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String)  # Change from DateTime to String
+    title = Column(String)
+    date = Column(String)  
     reflection = Column(String)
     user_id = Column(Integer, ForeignKey("User.id"))
     user = relationship("User", back_populates="reflections")
@@ -24,6 +25,7 @@ class User(base):
     hashed_password = Column(String) 
     role = Column(String) 
     reflections = relationship("Reflection", back_populates="user")
+
 
 
   

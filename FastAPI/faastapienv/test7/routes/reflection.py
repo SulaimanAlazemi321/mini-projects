@@ -24,12 +24,15 @@ class Reflection_ID_Schema(BaseModel):
 
 class Reflection_Reflection_Schema(BaseModel):
     reflection: str = Field(min_length=2)
-    title: Optional[str] = None  
+    date: Optional[str] = None 
+    title: str = Field(min_length=2)
+ 
 
     model_config={"json_schema_extra": {
         "example": {
             "reflection": "Reflection...",
-            "title": "December 25, 2023 at 3:45 PM"
+            "date": "December 25, 2023 at 3:45 PM",
+            "title": "yourTitle"
         }
     }}
 
@@ -73,6 +76,18 @@ class Question_Question_Schema(BaseModel):
     }}
 
 
+class Reflection_Reflection_ID_Schema(BaseModel):
+    reflection: str = Field(min_length=2)
+    title: Optional[str] = None
+    id: int = Field(gt=0)
+    model_config={"json_schema_extra": {
+        "example": {
+            "reflection": "Reflection...",
+            "title": "Updated title",
+            "id": "TheID"
+        }
+    }}
+
 
 # ---------Get Local Session ------------- 
 
@@ -114,7 +129,8 @@ async def add_reflection(db: dbDepends, reflection_ref: Reflection_Reflection_Sc
 
     new_reflection = Reflection(
         reflection = reflection_ref.reflection,
-        title = reflection_ref.title or "No date",  
+        date = reflection_ref.date or "No date", 
+        title = reflection_ref.title,
         user_id = user.get("id")
     )
     try:
@@ -125,6 +141,7 @@ async def add_reflection(db: dbDepends, reflection_ref: Reflection_Reflection_Sc
             "success": "Reflection Added", 
             "id": new_reflection.id,
             "title": new_reflection.title, 
+            "date": new_reflection.date, 
             "reflection": new_reflection.reflection
         }
     except:
@@ -140,11 +157,13 @@ async def update_reflection_by_id(db: dbDepends, reflection_parm: Reflection_Ref
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     
     updated_Reflection.reflection = reflection_parm.reflection
+    if reflection_parm.title:  # Update title if provided
+        updated_Reflection.title = reflection_parm.title
     updated_Reflection.user_id = user.get("id")
     try: 
         db.add(updated_Reflection)
         db.commit()
-        return {"Seccuss": "Reflection Updated"}
+        return {"Success": "Reflection Updated"}
 
     except:
         db.rollback()
@@ -198,7 +217,6 @@ async def add_reflection_by_id(db: dbDepends, question_parm: Question_Question_S
 
 
 
-
 # ---------Delete Question -------------
 @router.delete("/delete-question-by-id", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_reflection_by_id(db: dbDepends, question_parm: Question_ID_Schema):
@@ -214,3 +232,20 @@ async def delete_reflection_by_id(db: dbDepends, question_parm: Question_ID_Sche
         db.rollback()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# ---------Update Question -------------
+@router.put("/update-question-by-id", status_code=status.HTTP_204_NO_CONTENT)
+async def update_question_by_id(db: dbDepends, question_parm: Question_Question_ID_Schema):
+    updated_question = db.query(Question).filter(Question.id == question_parm.id).first()
+    if not updated_question:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    
+    updated_question.question = question_parm.question
+    try: 
+        db.add(updated_question)
+        db.commit()
+        return {"Seccuss": "Question Updated"}
+
+    except:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
