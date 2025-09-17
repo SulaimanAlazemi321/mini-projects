@@ -32,7 +32,8 @@ class Reflection_Reflection_Schema(BaseModel):
         "example": {
             "reflection": "Reflection...",
             "date": "December 25, 2023 at 3:45 PM",
-            "title": "yourTitle"
+            "title": "yourTitle",
+            "user_id": "TheID"
         }
     }}
 

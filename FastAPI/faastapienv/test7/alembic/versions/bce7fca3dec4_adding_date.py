@@ -1,27 +1,26 @@
-"""adding date
-
-Revision ID: bce7fca3dec4
-Revises: c96f31fd95f5
-Create Date: 2025-09-14 12:56:37.558459
-
-"""
-from typing import Sequence, Union
+"""adding date"""
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import inspect
 
+# --- REQUIRED HEADERS ---
+revision = "bce7fca3dec4"
+down_revision = "c96f31fd95f5"
+branch_labels = None
+depends_on = None
+# ------------------------
 
-# revision identifiers, used by Alembic.
-revision: str = 'bce7fca3dec4'
-down_revision: Union[str, Sequence[str], None] = 'c96f31fd95f5'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+def upgrade():
+    bind = op.get_bind()
+    insp = inspect(bind)
+    cols = {c["name"] for c in insp.get_columns("reflection")}
+    if "date" not in cols:
+        op.add_column("reflection", sa.Column("date", sa.String(), nullable=True))
 
-
-def upgrade() -> None:
-    op.add_column("reflection",sa.Column("date", sa.String(), nullable=True))
-
-
-def downgrade() -> None:
-    """Downgrade schema."""
-    pass
+def downgrade():
+    bind = op.get_bind()
+    insp = inspect(bind)
+    cols = {c["name"] for c in insp.get_columns("reflection")}
+    if "date" in cols:
+        op.drop_column("reflection", "date")

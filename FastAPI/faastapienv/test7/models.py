@@ -24,6 +24,10 @@ class User(base):
     username = Column(String, unique=True)
     hashed_password = Column(String) 
     role = Column(String) 
+    google_id = Column(String, unique=True, nullable=True)
+    email = Column(String, unique=True, nullable=True)
+    full_name = Column(String, nullable=True)
+    avatar_url = Column(String, nullable=True)
     reflections = relationship("Reflection", back_populates="user")
 
 
