@@ -185,3 +185,28 @@ async def signup_page(req: Request):
         "request": req,
         "recaptcha_site_key": settings.RECAPTCHA_SITE_KEY
     })
+
+@router.get("/verify-email")
+async def verify_email_page(req: Request):
+    return template.TemplateResponse("verify-email.html", {
+        "request": req
+    })
+
+# ADD THESE MISSING ROUTES
+@router.get("/forgot-password")
+async def forgot_password_page(req: Request):
+    return template.TemplateResponse("forgot-password.html", {
+        "request": req,
+        "recaptcha_site_key": settings.RECAPTCHA_SITE_KEY
+    })
+
+@router.get("/reset-password")
+async def reset_password_page(req: Request):
+    return template.TemplateResponse("reset-password.html", {
+        "request": req
+    })
+
+# Add this at the end of your view.py file for testing
+@router.get("/test-forgot")
+async def test_forgot_password():
+    return {"message": "Forgot password route is working!"}

@@ -78,12 +78,12 @@ function showToast(message, type = 'info') {
   const toastElement = document.getElementById(toastId);
   setTimeout(() => {
     toastElement.classList.remove('translate-x-full');
-  }, 10);
+  }, 100);
   
   // Auto remove after 4 seconds
   setTimeout(() => {
     removeToast(toastId);
-  }, 4000);
+  }, 2000);
 }
 
 /**
@@ -95,7 +95,7 @@ function removeToast(toastId) {
     toastElement.classList.add('translate-x-full');
     setTimeout(() => {
       toastElement.remove();
-    }, 300);
+    }, 200);
   }
 }
 
@@ -424,6 +424,7 @@ async function createNewReflection(reflection, title) {
   document.getElementById("reflectionForm").reset();
   document.getElementById("charCount").textContent = "0 characters";
   showToast("Reflection saved successfully! 🌟", "success");
+  getRandomQuestion()
 }
 
 /**
@@ -434,10 +435,58 @@ function addNewReflectionToList(date, id, title) {
   if (!reflectionsList) return;
 
   // Remove empty state if exists
-  const emptyState = reflectionsList.querySelector('.text-center.py-12');
-  if (emptyState) emptyState.remove();
+  const emptyState = document.getElementById('emptyReflectionsState');
+  if (emptyState) {
+    emptyState.remove();
+    console.log('Removed empty state - user now has reflections');
+  }
 
-  reflectionsList.insertAdjacentHTML('afterbegin', `
+  // Get current date info for grouping
+  const currentYear = new Date().getFullYear();
+  const dateObj = new Date(date.split(' at ')[0]);
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth();
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+                     "July", "August", "September", "October", "November", "December"];
+  const monthName = monthNames[month];
+  
+  // Determine group name
+  const groupName = year === currentYear ? monthName : `${monthName} ${year}`;
+  
+  // Look for existing group
+  let existingGroup = document.querySelector(`[data-group="${groupName}"]`);
+  
+  if (existingGroup) {
+    // Add to existing group
+    const reflectionsContainer = existingGroup.querySelector('.space-y-3');
+    reflectionsContainer.insertAdjacentHTML('afterbegin', createReflectionHTML(date, id, title));
+  } else {
+    // Create new group and add to the top
+    const newGroupHTML = `
+      <div class="mb-6 animate-slide-up" data-group="${groupName}">
+        <!-- Month/Year Header -->
+        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
+          ${groupName}
+        </h3>
+        
+        <!-- Reflections in this group -->
+        <div class="space-y-3">
+          ${createReflectionHTML(date, id, title)}
+        </div>
+      </div>
+    `;
+    
+    reflectionsList.insertAdjacentHTML('afterbegin', newGroupHTML);
+  }
+  
+  console.log('Added new reflection to sidebar:', { date, id, title });
+}
+
+/**
+ * Create HTML for a single reflection item
+ */
+function createReflectionHTML(date, id, title) {
+  return `
     <div class="bg-gray-800/50 border border-gray-700 rounded-xl p-4 hover:bg-gray-800 transition-colors duration-200 group animate-slide-up" 
          id="reflection-item-${id}">
       <div class="reflection-summary" id="summary-${id}">
@@ -461,7 +510,7 @@ function addNewReflectionToList(date, id, title) {
       <div class="reflection-content hidden" id="content-${id}"></div>
       <div class="title-edit hidden" id="title-edit-${id}"></div>
     </div>
-  `);
+  `;
 }
 
 // ========== REFLECTION VIEWING & EDITING ==========
@@ -611,10 +660,11 @@ async function save_reflection(reflection_id) {
       showToast("Failed to save changes. Please try again.", "error");
       return;
     }
-    
+   
     currentReflectionData[reflection_id].reflection = newContent;
     cancel_reflection_edit(reflection_id);
     showToast("Reflection updated successfully! ✨", "success");
+     getRandomQuestion()
     
   } catch (error) {
     showToast("Connection error. Please try again.", "error");
@@ -775,8 +825,36 @@ async function performDelete(reflection_id) {
     
     // Remove from UI and clean up data
     const reflection_item = document.getElementById(`reflection-item-${reflection_id}`);
+    const parentGroup = reflection_item.closest('[data-group]');
+    
     reflection_item.remove();
     delete currentReflectionData[reflection_id];
+    
+    // Check if group is now empty
+    if (parentGroup) {
+      const remainingReflections = parentGroup.querySelectorAll('[id^="reflection-item-"]');
+      if (remainingReflections.length === 0) {
+        parentGroup.remove();
+      }
+    }
+    
+    // Check if reflections list is completely empty
+    const reflectionsList = document.getElementById('reflectionsList');
+    const remainingItems = reflectionsList.querySelectorAll('[id^="reflection-item-"]');
+    
+    if (remainingItems.length === 0) {
+      // Show empty state again
+      reflectionsList.innerHTML = `
+        <div id="emptyReflectionsState" class="text-center py-12 text-gray-500 animate-fade-in">
+          <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
+          </svg>
+          <p class="text-lg font-medium mb-2">No memories yet</p>
+          <p class="text-sm">Write your first reflection to get started!</p>
+          <p class="text-xs text-gray-600 mt-4">Your reflections will appear here after saving</p>
+        </div>
+      `;
+    }
     
     showToast("Reflection deleted successfully! 🗑️", "success");
     
@@ -880,10 +958,8 @@ function logout() {
     method: 'POST',
     credentials: 'include'
   }).then(() => {
-    showToast("Logged out successfully. See you soon! 👋", "info");
-    setTimeout(() => {
       window.location.href = '/';
-    }, 1000);
+
   }).catch(() => {    
     window.location.href = '/';
   });
@@ -895,12 +971,65 @@ function logout() {
  * Initialize all event listeners and functionality
  */
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize forms
+  // ========== SIDEBAR FUNCTIONALITY ==========
+  const openSidebarBtn = document.getElementById('openSidebarBtn');
+  const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const sidebar = document.getElementById('sidebar');
+
+  // Function to open sidebar
+  function openSidebar() {
+    if (sidebarOverlay && sidebar) {
+      sidebarOverlay.classList.remove('hidden');
+      setTimeout(() => {
+        sidebarOverlay.classList.remove('opacity-0');
+        sidebar.classList.remove('translate-x-full');
+      }, 10);
+    }
+  }
+
+  // Function to close sidebar
+  function closeSidebar() {
+    if (sidebarOverlay && sidebar) {
+      sidebarOverlay.classList.add('opacity-0');
+      sidebar.classList.add('translate-x-full');
+      setTimeout(() => {
+        sidebarOverlay.classList.add('hidden');
+      }, 300);
+    }
+  }
+
+  // Sidebar open button
+  if (openSidebarBtn) {
+    openSidebarBtn.addEventListener('click', function() {
+      console.log('Opening sidebar...');
+      openSidebar();
+    });
+  } else {
+    console.log('Open sidebar button not found');
+  }
+
+  // Sidebar close button
+  if (closeSidebarBtn) {
+    closeSidebarBtn.addEventListener('click', closeSidebar);
+  }
+
+  // Close sidebar when clicking overlay
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', function(e) {
+      if (e.target === sidebarOverlay) {
+        closeSidebar();
+      }
+    });
+  }
+
+  // ========== FORM INITIALIZATION ==========
   initializeReflectionForm();
-  initializeLoginForm();
   
-  // Initialize delete confirmation
+  // ========== DELETE CONFIRMATION ==========
   const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+  const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+  
   if (confirmDeleteBtn) {
     confirmDeleteBtn.addEventListener('click', async function() {
       if (reflectionToDelete) {
@@ -916,6 +1045,70 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+  
+  if (cancelDeleteBtn) {
+    cancelDeleteBtn.addEventListener('click', function() {
+      reflectionToDelete = null;
+      const modal = document.getElementById('confirmDeleteModal');
+      modal.classList.add('opacity-0');
+      modal.querySelector('div > div').classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    });
+  }
+  
+  // ========== EXIT EXPAND MODE ==========
+  const exitExpandModeBtn = document.getElementById('exitExpandMode');
+  if (exitExpandModeBtn) {
+    exitExpandModeBtn.addEventListener('click', function() {
+      exitExpandMode();
+    });
+  }
+  
+  // ========== EDIT TITLE FUNCTIONALITY ==========
+  const editTitleBtn = document.getElementById('editTitleBtn');
+  if (editTitleBtn) {
+    editTitleBtn.addEventListener('click', function() {
+      showCustomTitleInput();
+    });
+  }
+  
+  // ========== RANDOM QUESTION FUNCTIONALITY ==========
+  const randomQuestionBtn = document.getElementById('randomQuestionBtn');
+  if (randomQuestionBtn) {
+    randomQuestionBtn.addEventListener('click', async function() {
+      // Add loading state to button
+      const originalIcon = this.innerHTML;
+      this.innerHTML = `
+        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      `;
+      this.disabled = true;
+      
+      try {
+        await getRandomQuestion();
+      } finally {
+        // Restore button state
+        setTimeout(() => {
+          this.innerHTML = originalIcon;
+          this.disabled = false;
+        }, 300);
+      }
+    });
+  }
+  
+  // ========== TITLE CLICK FUNCTIONALITY ==========
+  const titleElement = document.getElementById('title');
+  if (titleElement) {
+    titleElement.addEventListener('click', function() {
+      edit_current_title();
+    });
+  }
+  
+  console.log('Page initialization complete');
 });
 
 

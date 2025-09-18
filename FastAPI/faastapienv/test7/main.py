@@ -1,23 +1,23 @@
-from models import Reflection, base
-from database import engine, localSession
-from fastapi import FastAPI, Depends, HTTPException, status
-from typing import Annotated, Optional
-from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
-from routes import reflection, view, user
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from routes import user, view, reflection  # Your existing route imports
+import uvicorn
 
+app = FastAPI(
+    title="Hmoom",
+    description="realse your thoughts",
+    version="1.0.0"
+)
 
-
-base.metadata.create_all(bind=engine)
-
-
-app = FastAPI()
-
+# Mount static files directory
 app.mount("/static", StaticFiles(directory="View/static"), name="static")
 
-app.include_router(reflection.router)
-app.include_router(view.router)
+# Include your existing routers
 app.include_router(user.router)
+app.include_router(view.router)
+app.include_router(reflection.router)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
 

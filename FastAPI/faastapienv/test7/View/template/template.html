@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon.png">
+    <link rel="shortcut icon" href="/static/images/favicon.png">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -46,6 +51,7 @@
     }
     
     /* Custom scrollbar */
+
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -64,7 +70,7 @@
     }
   </style>
 
-  <title>Reflections - Your Personal Journal</title>
+  <title>Hmoom</title>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen">
   <!-- ========== NAVIGATION BAR ========== -->
@@ -153,5 +159,6 @@
 
   <!-- Your custom JS -->
   <script src="{{ url_for('static', path='/js/ajax.js') }}"></script>
+
 </body>
 </html>
