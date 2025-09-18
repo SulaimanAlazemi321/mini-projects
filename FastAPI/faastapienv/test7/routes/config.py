@@ -2,15 +2,16 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    SECRET_KEY: str
-    ALGORITHM: str
-    GOOGLE_CLIENT_ID: str = "558580275319-b6a6f7m3ieboh5jrtkogo3jqgnr83slb.apps.googleusercontent.com"
-    GOOGLE_CLIENT_SECRET: str = "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"
-    GOOGLE_REDIRECT_URI: str = "http://localhost:8000/user/google/callback"
+    # Sensitive keys - loaded from .env
+    SECRET_KEY: str  # From .env
+    GOOGLE_CLIENT_SECRET: str  # From .env
+    RECAPTCHA_SECRET_KEY: str  # From .env
     
-    # reCAPTCHA keys - use test keys by default for development
+    # Public configuration - can stay in code
+    ALGORITHM: str = "HS256"
+    GOOGLE_CLIENT_ID: str  # From .env - moved for GitHub security
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8000/user/google/callback"
     RECAPTCHA_SITE_KEY: str = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-    RECAPTCHA_SECRET_KEY: str = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
     
     # Email configuration
     EMAIL_HOST: str = "smtp.gmail.com"
@@ -18,7 +19,7 @@ class Settings(BaseSettings):
     EMAIL_USERNAME: str = "hamadq118@gmail.com"
     EMAIL_APP_PASSWORD: str  # From .env
     EMAIL_FROM: str = "hamadq118@gmail.com"
-    EMAIL_FROM_NAME: str = "Your App Name"
+    EMAIL_FROM_NAME: str = "Hmoom"
     
     class Config:
         env_file = ".env"
