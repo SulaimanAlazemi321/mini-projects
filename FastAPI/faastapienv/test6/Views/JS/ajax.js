@@ -18,6 +18,7 @@ function initializeSearch() {
       return;
     }
 
+    
     try {
       const response = await fetch("/ecoUser/liveSearch", {
         method: "POST",

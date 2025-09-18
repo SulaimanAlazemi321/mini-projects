@@ -1,0 +1,37 @@
+/* Optional board container (use in parent, not required inside the column) */
+.board{ display:grid; grid-template-columns:repeat(3,minmax(280px,1fr)); gap:28px; padding:16px; }
+
+/* Local theme tokens (scoped) */
+.tc_scope{
+  --panel: rgba(17,24,48,0.55);
+  --glass-stroke: rgba(120,210,255,0.22);
+  --neon-cyan:#21e6ff; --neon-purple:#a855f7;
+  --text:#e6f1ff; --muted:#9fb0c1; --bgCard: rgba(8,13,30,0.7);
+}
+
+/* Column glass panel */
+.column{
+  display:flex; flex-direction:column;
+  min-height:70vh; padding:14px;
+  background: var(--panel);
+  border:1px solid var(--glass-stroke);
+  border-radius:14px;
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow: 0 10px 25px rgba(0,0,0,.35), 0 0 22px rgba(33,230,255,.18);
+}
+
+/* Header */
+.column_head{
+  font: 700 1rem/1.2 Orbitron, Rajdhani, system-ui, sans-serif;
+  color: var(--text); letter-spacing:.5px; margin-bottom:12px;
+  position:relative; padding-bottom:10px;
+}
+.column_head::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
+  background: linear-gradient(90deg,var(--neon-cyan),var(--neon-purple));
+  opacity:.35; border-radius:2px;
+}
+.status_icon{ margin-left:6px; opacity:.85 }
+
+/* Body */
+.column_body{ display:flex; flex-direction:column; gap:12px; flex:1; }

@@ -154,8 +154,6 @@ async def liveSearch(db: dbDependency, theQuery : Search_schema):
 
 @router.post("/addEcoUser", status_code=status.HTTP_201_CREATED)
 async def addEcoUser(db: dbDependency, user : user_schema):
-   
-    
     new_User = ecoUser(
         username = user.username,
         password = pass_hasher.hash(user.password),

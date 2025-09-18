@@ -19,6 +19,8 @@ def setup_logger() -> logging.Logger:
         interval=1,
         backupCount=14,
         encoding="utf-8",
+        
+
     )
     handler.setFormatter(JsonFormatter())
 

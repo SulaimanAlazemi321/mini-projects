@@ -1,0 +1,41 @@
+/* inherit tokens from parent column; keep local just in case */
+.task_scope{
+  --glass-stroke: rgba(120,210,255,0.22);
+  --neon-cyan:#21e6ff; --neon-purple:#a855f7;
+  --text:#e6f1ff; --muted:#9fb0c1; --bgCard: rgba(8,13,30,0.7);
+}
+
+/* Card */
+.task_card{
+  background: var(--bgCard);
+  border:1px solid var(--glass-stroke);
+  border-radius:12px; padding:14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.04) inset;
+  transition: transform .08s ease, box-shadow .2s ease;
+}
+.task_card:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.32), 0 0 18px rgba(33,230,255,.15); }
+
+/* Header row */
+.task_header{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.task_title{ margin:0; font:600 1rem/1.2 Rajdhani, system-ui, sans-serif; color:var(--text); }
+
+/* Tags */
+.tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+.tag_chip{
+  background: linear-gradient(90deg, rgba(33,230,255,.12), rgba(168,85,247,.12));
+  border:1px solid rgba(120,210,255,.25);
+  color: var(--text); font-weight:600; font-size:.85rem;
+  padding:6px 10px; border-radius:999px; backdrop-filter: blur(4px);
+}
+
+/* Delete button */
+.DeleteButton{
+  position:relative; border:none; cursor:pointer;
+  width:34px; height:30px; border-radius:8px;
+  background: linear-gradient(90deg, #ff6b6b, #ff3b3b);
+  box-shadow: 0 4px 12px rgba(255,59,59,.25);
+  transition: transform .08s, filter .2s;
+}
+.DeleteButton:hover{ filter:brightness(1.05); }
+.DeleteButton:active{ transform: translateY(1px) scale(.98); }
+.DeleteButton::before{ content:"🗑️"; font-size:16px; }

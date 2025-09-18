@@ -1,0 +1,7 @@
+.app_main {
+  display: flex;
+  justify-content: space-evenly; /* centers horizontally */
+  align-items: center;     /* centers vertically if there's height */
+  gap: 150px;               /* spacing between sections */
+  min-height: 70vh;       /* optional: makes sure it's vertically centered */
+}

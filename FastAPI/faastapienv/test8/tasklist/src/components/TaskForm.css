@@ -1,0 +1,268 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap');
+
+button, input, select { font: inherit; color: inherit; }
+
+.tf_scope{ /* local tokens only for this component subtree */
+   --bg:#0a0f1f; --bg-2:#0c1329; --panel:rgba(17,24,48,.55);
+   --glass-stroke:rgba(120,210,255,.22);
+   --neon-cyan:#21e6ff; --neon-purple:#a855f7;
+   --text:#e6f1ff; --muted:#9fb0c1;
+}
+
+/* ===== HEADER WRAPPER ===== */
+.app_header{
+  position: relative;
+  padding: 22px 16px 28px;
+  overflow: clip;
+  background:
+    radial-gradient(1200px 400px at 10% -10%, rgba(168,85,247,0.15), transparent 60%),
+    radial-gradient(1000px 500px at 90% -20%, rgba(33,230,255,0.18), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  animation: bgShift 14s ease-in-out infinite alternate;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* subtle animated halo */
+.header_glow{
+  position:absolute; inset:-40% -10% auto -10%;
+  height: 60%;
+  background: radial-gradient(60% 100% at 50% 0%,
+    rgba(33,230,255,0.25),
+    rgba(168,85,247,0.18) 50%,
+    transparent 70%);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+/* scanlines overlay */
+.scanlines{
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03) 0,
+    rgba(255,255,255,0.03) 2px,
+    transparent 3px,
+    transparent 6px
+  );
+  mix-blend-mode: overlay;
+  pointer-events:none;
+}
+
+/* inner glass panel */
+.header_inner{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 16px;
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 0 24px 0 var(--shadow);
+  position: relative;
+}
+
+/* brand */
+.brand{
+  display:flex; align-items:center; gap:10px;
+  margin: 2px 2px 12px;
+  letter-spacing: 0.6px;
+}
+.brand_icon{ font-size: 22px; color: var(--neon-cyan); filter: drop-shadow(0 0 6px rgba(33,230,255,0.55)); }
+.brand_text{
+  font-family: Orbitron, Rajdhani, sans-serif;
+  font-weight: 700; font-size: 18px;
+  text-transform: uppercase;
+}
+.brand_text span{ color: var(--neon-cyan); }
+.brand_spark{ color: var(--neon-purple); opacity: .9; }
+
+/* form layout */
+.header_form{
+  display:flex; flex-direction: column; gap: 14px; align-items: stretch;
+}
+
+/* input */
+.input_text{
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(8,13,30,0.65);
+  border: 1px solid rgba(120,210,255,0.18);
+  border-radius: 12px;
+  outline: none;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+  transition: border-color .2s, box-shadow .2s, transform .1s;
+}
+.input_text::placeholder{ color: var(--muted); font-family: "Share Tech Mono", monospace; }
+.input_text:focus{
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 0 3px rgba(33,230,255,0.18),
+    0 0 18px -2px rgba(33,230,255,0.35);
+  transform: translateY(-1px);
+}
+
+/* rows */
+.form_tags_buttons{ display:flex; flex-direction: column; gap: 12px; }
+.tags_row{ display:flex; flex-wrap:wrap; gap:10px; }
+.controls_row{ display:flex; gap:10px; align-items:center; flex-wrap: wrap; }
+
+/* select (custom wrapper) */
+.select_wrap{
+  position: relative;
+  min-width: 160px;
+}
+.task_status{
+  width: 100%;
+  appearance: none;
+  padding: 12px 40px 12px 14px;
+  border-radius: 12px;
+  background: rgba(8,13,30,0.7);
+  border: 1px solid rgba(120,210,255,0.18);
+  color: var(--text);
+  transition: border-color .2s, box-shadow .2s;
+}
+.task_status:focus{
+  border-color: var(--neon-purple);
+  box-shadow:
+    0 0 0 3px rgba(168,85,247,0.18),
+    0 0 18px -2px rgba(168,85,247,0.35);
+}.app_header {
+  background-color: #1e1e2f; /* Dark background for the header */
+  padding: 20px;            /* Space inside the header */
+  text-align: center;       /* Center align content */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow under header */
+}
+
+.header_form {
+  display: flex;            /* Arrange items in a row */
+  flex-direction: column;   /* Stack inputs and buttons vertically */
+  gap: 15px;                /* Space between stacked elements */
+  align-items: center;      /* Center items horizontally */
+}
+
+.input_text {
+  width: 60%;               /* Input takes 60% of header width */
+  padding: 10px;            /* Inner space inside input */
+  border: 1px solid #ccc;   /* Light border */
+  border-radius: 6px;       /* Rounded corners */
+  font-size: 16px;          /* Larger text */
+}
+
+
+
+.tag_button {
+  background-color: #333;   /* Dark background */
+  color: white;             /* White text */
+  border: none;             /* Remove default border */
+  padding: 8px 12px;        /* Inner spacing */
+  border-radius: 20px;      /* Pill shape */
+  cursor: pointer;          /* Show pointer on hover */
+  transition: 0.3s;         /* Smooth hover effect */
+}
+
+.tag_button:hover {
+  background-color: #555;   /* Lighter color on hover */
+}
+
+.task_status {
+  padding: 8px 12px;        /* Inner spacing */
+  border-radius: 6px;       /* Rounded corners */
+  border: 1px solid #ccc;   /* Light border */
+  font-size: 14px;          /* Slightly smaller text */
+}
+
+.task_submit {
+  background-color: #007bff; /* Blue background */
+  color: white;              /* White text */
+  border: none;              /* Remove border */
+  padding: 10px 15px;        /* Inner space */
+  border-radius: 6px;        /* Rounded corners */
+  font-size: 15px;           /* Medium text size */
+  cursor: pointer;           /* Show pointer on hover */
+  transition: 0.3s;          /* Smooth hover effect */
+}
+
+.task_submit:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.select_caret{
+  position:absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* submit button */
+.task_submit{
+  display:inline-flex; align-items:center; gap:10px;
+  border: none; cursor: pointer;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700; letter-spacing: 0.3px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+  color: #06111a;
+  text-shadow: 0 0 10px rgba(255,255,255,0.35);
+  box-shadow:
+    0 6px 18px rgba(33,230,255,0.25),
+    0 0 0 1px rgba(255,255,255,0.06) inset;
+  transition: transform .08s ease, filter .2s ease, box-shadow .2s ease;
+}
+.task_submit:hover{
+  filter: brightness(1.05);
+  box-shadow:
+    0 10px 26px rgba(168,85,247,0.3),
+    0 0 0 1px rgba(255,255,255,0.1) inset;
+}
+.task_submit:active{ transform: translateY(1px) scale(0.99); }
+
+/* tag chips (works if Tag uses .tag_button; also styles .active/aria-pressed) */
+.tag_button{
+  position: relative;
+  background: transparent;
+  border: 1px solid rgba(120,210,255,0.25);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, background .2s, transform .08s;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+.tag_button:hover{ border-color: var(--neon-cyan); box-shadow: 0 0 12px rgba(33,230,255,0.18); }
+.tag_button.active,
+.tag_button[aria-pressed="true"]{
+  background: linear-gradient(90deg, rgba(33,230,255,0.18), rgba(168,85,247,0.18));
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 0 2px rgba(33,230,255,0.18),
+    0 0 18px rgba(33,230,255,0.32);
+}
+
+
+.task_submit:hover::after{ transform: translateX(0%); }
+
+/* responsive */
+@media (min-width: 700px){
+  .header_form{ flex-direction: column; }
+  .input_text{ font-size: 17px; }
+  .form_tags_buttons{ gap: 14px; }
+  .controls_row{ justify-content: flex-end; }
+}
+
+/* SR-only label for a11y */
+.sr_only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); border:0;
+}
+
+/* animations */
+@keyframes bgShift{
+  0% { background-position: 0 0, 100% 0, 0 0; }
+  100% { background-position: 10% -2%, 90% 4%, 0 0; }
+}

@@ -1,0 +1,6 @@
+.form_tags_buttons {
+  display: flex;            /* Arrange tag buttons in a row */
+  gap: 10px;                /* Space between buttons */
+  flex-wrap: wrap;          /* Wrap buttons to next line if too many */
+  justify-content: center;  /* Center align all buttons */
+}
